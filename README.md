@@ -109,32 +109,32 @@ The results below compare PHP arrays, the package's PHP backend, and native acce
 <summary>Latest benchmark results and downloads</summary>
 
 <!-- benchmark:latest:start -->
-Measured 2026-11-04T10:17:57.480567+01:00 with PHP 8.4.27 on Linux-7.0.0-1017-azure-x86_64-with-glibc2.39; 3 samples per configuration. Source: [a6f8c6a](https://github.com/petericebear/roaringbitmap-php/commit/a6f8c6af16213ffbb072dcbfe5fe2208584596b3).
+Measured 2026-11-04T10:31:00.914876+01:00 with PHP 8.4.27 on Linux-7.0.0-1017-azure-x86_64-with-glibc2.39; 3 samples per configuration. Source: [97a7d23](https://github.com/petericebear/roaringbitmap-php/commit/97a7d239905821bed1027dbac9133d1f78bd43c3).
 
 Median CLI timings; build creates both input sets. RSS is whole-process peak after construction.
 
 | IDs/input | Workload | Backend | Build (ms) | Intersection (ms) | Peak RSS (MiB) |
 | ---: | --- | --- | ---: | ---: | ---: |
-| 1,000,000 | dense | PHP array | 236.90 | 27.6303 | 131.78 |
-| 1,000,000 | dense | Package PHP | 1182.85 | 1.3919 | 53.68 |
-| 1,000,000 | dense | Native accelerator | 338.61 | 0.0189 | 53.38 |
-| 1,000,000 | sparse_mixed | PHP array | 441.30 | 49.4722 | 131.87 |
-| 1,000,000 | sparse_mixed | Package PHP | 1741.38 | 157.3397 | 66.40 |
-| 1,000,000 | sparse_mixed | Native accelerator | 514.79 | 1.3738 | 60.41 |
-| 1,000,000 | ranges | PHP array | 205.09 | 28.2049 | 109.12 |
-| 1,000,000 | ranges | Package PHP | 0.38 | 0.0964 | 52.70 |
-| 1,000,000 | ranges | Native accelerator | 0.02 | 0.0023 | 52.75 |
+| 1,000,000 | dense | PHP array | 244.34 | 27.9169 | 131.83 |
+| 1,000,000 | dense | Package PHP | 1172.05 | 1.3999 | 53.32 |
+| 1,000,000 | dense | Native accelerator | 346.44 | 0.0201 | 53.38 |
+| 1,000,000 | sparse_mixed | PHP array | 417.63 | 47.6104 | 131.76 |
+| 1,000,000 | sparse_mixed | Package PHP | 1733.96 | 155.8019 | 66.46 |
+| 1,000,000 | sparse_mixed | Native accelerator | 505.17 | 1.3814 | 60.15 |
+| 1,000,000 | ranges | PHP array | 208.74 | 27.5475 | 109.15 |
+| 1,000,000 | ranges | Package PHP | 0.38 | 0.0957 | 52.65 |
+| 1,000,000 | ranges | Native accelerator | 0.02 | 0.0023 | 52.77 |
 
 Sparse unsigned 64-bit order queries: milliseconds per 1,000 warm queries. The accelerator column includes the package's C index; stock CRoaring uses direct scans.
 
 | IDs | Query | Package PHP | Stock CRoaring | Native accelerator | Stock / accelerator |
 | ---: | --- | ---: | ---: | ---: | ---: |
-| 1,000,000 | rank | 4.2630 | 328.2045 | 2.1733 | 151.02× |
-| 1,000,000 | select | 3.6721 | 208.4676 | 2.4856 | 83.87× |
+| 1,000,000 | rank | 3.5089 | 234.9436 | 2.0410 | 115.11× |
+| 1,000,000 | select | 3.4828 | 204.9809 | 2.5593 | 80.09× |
 
 These are synthetic CLI workloads on shared hardware. Set-algebra samples use fresh processes; order samples use fresh bitmaps in one process per mode/size. Input generation is included in set construction and excluded in order construction. Native mode is required; exact-result checks run outside the timers. Cold queries, mutation costs, other operations, settings, hashes, and sample ranges are retained in the full reports. Compare backends within the same run; CI host variation can affect comparisons between runs.
 
-[Download full benchmark reports and raw samples](https://github.com/petericebear/roaringbitmap-php/actions/runs/41805846309/artifacts/13308774407) (GitHub sign-in required) · [CI run](https://github.com/petericebear/roaringbitmap-php/actions/runs/41805846309). Only the three newest benchmark bundles are retained; artifacts also expire after 90 days. The measured snapshot remains readable here.
+[Download full benchmark reports and raw samples](https://github.com/petericebear/roaringbitmap-php/actions/runs/41807683572/artifacts/13310956840) (GitHub sign-in required) · [CI run](https://github.com/petericebear/roaringbitmap-php/actions/runs/41807683572). Only the three newest benchmark bundles are retained; artifacts also expire after 90 days. The measured snapshot remains readable here.
 <!-- benchmark:latest:end -->
 
 </details>
