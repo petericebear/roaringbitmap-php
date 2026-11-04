@@ -176,6 +176,12 @@ python3 benchmarks/run.py --sizes 100000 1000000 --repetitions 5 --output benchm
 
 The tests cover unsigned boundaries through `2^64-1`, rank/select and cache invalidation, container transitions, ranges, mutation against independent set oracles, mixed-backend algebra, snapshots, malformed inputs, all 65,536 container keys, and Java/C/C++ fixtures from the official format repository. Independent Python integer vectors verify exact 64-bit conversions. CI runs PHP 8.2–8.5 with FFI disabled and native tests on Linux/macOS.
 
+CI jobs execute only when the GitHub account initiating the run is `petericebear`, including pushes, manual runs, and reruns. Automatic pull-request runs are disabled. The job conditions use [`github.triggering_actor`](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#github-context), so the account requesting a rerun is checked too. Other users' pushes can create a skipped workflow record, but neither test matrix starts. To trigger CI manually while authenticated as `petericebear`, use **Actions → Tests → Run workflow**, or:
+
+```sh
+gh workflow run tests.yml --repo petericebear/roaringbitmap-php --ref main
+```
+
 `composer bench` is a quick, single-sample timing check. The full benchmark runner compares PHP integer-keyed sets against both package backends using isolated processes, repeated samples, and full-process peak RSS that includes native allocations. It saves a Markdown report, raw JSON, and CSV; see [benchmark instructions](benchmarks/README.md). Native allocations are not included in PHP's allocator counters, so those counters alone are not used for the memory comparison.
 
 The [Herd measurement report from November 3, 2026](benchmarks/MEASUREMENTS.md) includes before/after comparisons at 100,000 and 1,000,000 IDs, construction and query tradeoffs, and the original data from 150 isolated samples. That report records the earlier 32-bit implementation; its source fingerprints are preserved.

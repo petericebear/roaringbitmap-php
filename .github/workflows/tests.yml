@@ -1,9 +1,13 @@
 name: Tests
 
-on: [push, pull_request]
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
   php:
+    # Check the current initiator, including manual runs and reruns.
+    if: ${{ github.triggering_actor == 'petericebear' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,6 +23,7 @@ jobs:
       - run: php -d ffi.enable=0 tests/run.php
 
   native:
+    if: ${{ github.triggering_actor == 'petericebear' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
