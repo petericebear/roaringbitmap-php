@@ -1,0 +1,458 @@
+[
+  {
+    "decimal": "0",
+    "little_endian_hex": "0000000000000000"
+  },
+  {
+    "decimal": "1",
+    "little_endian_hex": "0100000000000000"
+  },
+  {
+    "decimal": "65535",
+    "little_endian_hex": "ffff000000000000"
+  },
+  {
+    "decimal": "65536",
+    "little_endian_hex": "0000010000000000"
+  },
+  {
+    "decimal": "4294967295",
+    "little_endian_hex": "ffffffff00000000"
+  },
+  {
+    "decimal": "4294967296",
+    "little_endian_hex": "0000000001000000"
+  },
+  {
+    "decimal": "9007199254740991",
+    "little_endian_hex": "ffffffffffff1f00"
+  },
+  {
+    "decimal": "9007199254740992",
+    "little_endian_hex": "0000000000002000"
+  },
+  {
+    "decimal": "9007199254740993",
+    "little_endian_hex": "0100000000002000"
+  },
+  {
+    "decimal": "190158779666725043",
+    "little_endian_hex": "b3f8f4106794a302"
+  },
+  {
+    "decimal": "196951968685674151",
+    "little_endian_hex": "a7ce52a3c5b6bb02"
+  },
+  {
+    "decimal": "381884967400605030",
+    "little_endian_hex": "6685f9c25aba4c05"
+  },
+  {
+    "decimal": "530481698003138511",
+    "little_endian_hex": "cfb752314ba65c07"
+  },
+  {
+    "decimal": "701428054430196498",
+    "little_endian_hex": "1223ce6319f9bb09"
+  },
+  {
+    "decimal": "837329716473235867",
+    "little_endian_hex": "9b0944d6f0ca9e0b"
+  },
+  {
+    "decimal": "1038140319820803913",
+    "little_endian_hex": "49efeddd1e37680e"
+  },
+  {
+    "decimal": "1076769558441323840",
+    "little_endian_hex": "406dd95b3574f10e"
+  },
+  {
+    "decimal": "1083976352297289358",
+    "little_endian_hex": "8e869acfbf0e0b0f"
+  },
+  {
+    "decimal": "1610078583059753620",
+    "little_endian_hex": "94aabdd3f0255816"
+  },
+  {
+    "decimal": "2054712242890479385",
+    "little_endian_hex": "19172209e6cd831c"
+  },
+  {
+    "decimal": "2513895890024006680",
+    "little_endian_hex": "18043227fe26e322"
+  },
+  {
+    "decimal": "2709388745112496695",
+    "little_endian_hex": "372adf6eb5ae9925"
+  },
+  {
+    "decimal": "2824032933874745790",
+    "little_endian_hex": "bec19bb1fdfa3027"
+  },
+  {
+    "decimal": "2886758466747390738",
+    "little_endian_hex": "125bd4e287d30f28"
+  },
+  {
+    "decimal": "3090830541980259735",
+    "little_endian_hex": "9755a98300d6e42a"
+  },
+  {
+    "decimal": "3153504621461487458",
+    "little_endian_hex": "62bfc3c7be7fc32b"
+  },
+  {
+    "decimal": "3333753265490412406",
+    "little_endian_hex": "76c35a96eede432e"
+  },
+  {
+    "decimal": "3379981058897857036",
+    "little_endian_hex": "0cca277bdd1ae82e"
+  },
+  {
+    "decimal": "3626978847294522538",
+    "little_endian_hex": "aa84d8880b9e5532"
+  },
+  {
+    "decimal": "3635828667471469963",
+    "little_endian_hex": "8b9dd1dce80e7532"
+  },
+  {
+    "decimal": "3760833332076900655",
+    "little_endian_hex": "2f71e461fd293134"
+  },
+  {
+    "decimal": "3791999959914748191",
+    "little_endian_hex": "1f990367dfe39f34"
+  },
+  {
+    "decimal": "3829938055466491660",
+    "little_endian_hex": "0c9fd49b5eac2635"
+  },
+  {
+    "decimal": "4004099064161364559",
+    "little_endian_hex": "4feacf5ce26a9137"
+  },
+  {
+    "decimal": "4083270521114103337",
+    "little_endian_hex": "298ed4a4e7b0aa38"
+  },
+  {
+    "decimal": "4284957094873248347",
+    "little_endian_hex": "5bb2b56dc639773b"
+  },
+  {
+    "decimal": "4333923366838199764",
+    "little_endian_hex": "d4e5270c5730253c"
+  },
+  {
+    "decimal": "4676574289842060900",
+    "little_endian_hex": "64bec2ff8987e640"
+  },
+  {
+    "decimal": "5490503072582802070",
+    "little_endian_hex": "961a7d5f742f324c"
+  },
+  {
+    "decimal": "5608225246521968614",
+    "little_endian_hex": "e6c751e7256bd44d"
+  },
+  {
+    "decimal": "6194530841513177566",
+    "little_endian_hex": "de3198f6fa64f755"
+  },
+  {
+    "decimal": "6358237684679707140",
+    "little_endian_hex": "040ad6a07cff3c58"
+  },
+  {
+    "decimal": "6751461042577722698",
+    "little_endian_hex": "4acdbb250c02b25d"
+  },
+  {
+    "decimal": "6812750599716060618",
+    "little_endian_hex": "cabd672f93c08b5e"
+  },
+  {
+    "decimal": "7170875722471205854",
+    "little_endian_hex": "de6b5e067a118463"
+  },
+  {
+    "decimal": "7226366730101481029",
+    "little_endian_hex": "455e660c41364964"
+  },
+  {
+    "decimal": "7522773230160668772",
+    "little_endian_hex": "64688b3d65426668"
+  },
+  {
+    "decimal": "7602028479512921083",
+    "little_endian_hex": "fb43c5f59fd47f69"
+  },
+  {
+    "decimal": "7624617945886934376",
+    "little_endian_hex": "68c5a8f49f15d069"
+  },
+  {
+    "decimal": "7629049496897285432",
+    "little_endian_hex": "386d6fd418d4df69"
+  },
+  {
+    "decimal": "7751643406128976269",
+    "little_endian_hex": "8d11d19f9b5e936b"
+  },
+  {
+    "decimal": "7834149790976157344",
+    "little_endian_hex": "a0a65550ba7db86c"
+  },
+  {
+    "decimal": "7923533995413751728",
+    "little_endian_hex": "b0475e2a300cf66d"
+  },
+  {
+    "decimal": "8241533658176751480",
+    "little_endian_hex": "78070d5432cf5f72"
+  },
+  {
+    "decimal": "8373561022541674188",
+    "little_endian_hex": "cc36a78d62dd3474"
+  },
+  {
+    "decimal": "8465788636278878426",
+    "little_endian_hex": "daf0f038e9857c75"
+  },
+  {
+    "decimal": "8478132848126896811",
+    "little_endian_hex": "abaa2c03e860a875"
+  },
+  {
+    "decimal": "8623817005999103156",
+    "little_endian_hex": "b49c8c42e0f3ad77"
+  },
+  {
+    "decimal": "8965395626034677581",
+    "little_endian_hex": "4d47a338d27b6b7c"
+  },
+  {
+    "decimal": "9026264983357815856",
+    "little_endian_hex": "30fc96dd2dbc437d"
+  },
+  {
+    "decimal": "9210111162185924126",
+    "little_endian_hex": "1ebef3034ee3d07f"
+  },
+  {
+    "decimal": "9223372036854775807",
+    "little_endian_hex": "ffffffffffffff7f"
+  },
+  {
+    "decimal": "9223372036854775808",
+    "little_endian_hex": "0000000000000080"
+  },
+  {
+    "decimal": "9223372036854775809",
+    "little_endian_hex": "0100000000000080"
+  },
+  {
+    "decimal": "9511184445139576893",
+    "little_endian_hex": "3de8c345dc83fe83"
+  },
+  {
+    "decimal": "9567634061756327122",
+    "little_endian_hex": "d2e4e9d77c10c784"
+  },
+  {
+    "decimal": "9817492963220306183",
+    "little_endian_hex": "07b9a4b1d5bd3e88"
+  },
+  {
+    "decimal": "9861657499038669180",
+    "little_endian_hex": "7c59c4fe3ea5db88"
+  },
+  {
+    "decimal": "9903203041924849751",
+    "little_endian_hex": "57a07f7cb23e6f89"
+  },
+  {
+    "decimal": "9918961256392038837",
+    "little_endian_hex": "b5191cb4b53aa789"
+  },
+  {
+    "decimal": "10097021133670531368",
+    "little_endian_hex": "28410b8a39d31f8c"
+  },
+  {
+    "decimal": "10371522184798135426",
+    "little_endian_hex": "82e4f9f4790cef8f"
+  },
+  {
+    "decimal": "10749906894512705229",
+    "little_endian_hex": "cdcef3775d572f95"
+  },
+  {
+    "decimal": "11076600458314690701",
+    "little_endian_hex": "8db0c6346efdb799"
+  },
+  {
+    "decimal": "11266407194480208361",
+    "little_endian_hex": "e9e9e5c1a6515a9c"
+  },
+  {
+    "decimal": "11555750579753648130",
+    "little_endian_hex": "02003b63ed455ea0"
+  },
+  {
+    "decimal": "11763160327132008650",
+    "little_endian_hex": "cad0ab5efe233fa3"
+  },
+  {
+    "decimal": "11851131641809108716",
+    "little_endian_hex": "ec7e6c3070ad77a4"
+  },
+  {
+    "decimal": "11968559441319219149",
+    "little_endian_hex": "cdcffa5466dd18a6"
+  },
+  {
+    "decimal": "12036360483274927747",
+    "little_endian_hex": "83ae269216be09a7"
+  },
+  {
+    "decimal": "12105112696190848587",
+    "little_endian_hex": "4bce868edcfffda7"
+  },
+  {
+    "decimal": "12163967688514618625",
+    "little_endian_hex": "01453e4d2a18cfa8"
+  },
+  {
+    "decimal": "12443157717791918484",
+    "little_endian_hex": "94c9258504faaeac"
+  },
+  {
+    "decimal": "12668784693896877612",
+    "little_endian_hex": "2c16a1978e90d0af"
+  },
+  {
+    "decimal": "12769048605204551645",
+    "little_endian_hex": "dd17ea980dc634b1"
+  },
+  {
+    "decimal": "12884036443006897395",
+    "little_endian_hex": "f30c9de2e14acdb2"
+  },
+  {
+    "decimal": "13136121794285001239",
+    "little_endian_hex": "17da9f7a2ce14cb6"
+  },
+  {
+    "decimal": "13275336515090371716",
+    "little_endian_hex": "84d4bb8739783bb8"
+  },
+  {
+    "decimal": "13330920216991819158",
+    "little_endian_hex": "96e5de9e4ef100b9"
+  },
+  {
+    "decimal": "13385955626123376025",
+    "little_endian_hex": "99b5395ab877c4b9"
+  },
+  {
+    "decimal": "13489803480518029671",
+    "little_endian_hex": "67f11a22cb6835bb"
+  },
+  {
+    "decimal": "14312626988542384793",
+    "little_endian_hex": "99dabc1e6aaaa0c6"
+  },
+  {
+    "decimal": "14498621198706023382",
+    "little_endian_hex": "d61bd2c9297335c9"
+  },
+  {
+    "decimal": "14702906197641908903",
+    "little_endian_hex": "a7d2559449370bcc"
+  },
+  {
+    "decimal": "14789304457188055540",
+    "little_endian_hex": "f499cbf50b2a3ecd"
+  },
+  {
+    "decimal": "14823335866678766267",
+    "little_endian_hex": "bbeab1ef6e11b7cd"
+  },
+  {
+    "decimal": "15205940996847547246",
+    "little_endian_hex": "6eb3a5a8c55a06d3"
+  },
+  {
+    "decimal": "15307089659825828741",
+    "little_endian_hex": "8533f9f6f1b46dd4"
+  },
+  {
+    "decimal": "15462836468125041585",
+    "little_endian_hex": "b1838c96d70797d6"
+  },
+  {
+    "decimal": "15576973893479529147",
+    "little_endian_hex": "bb7a61cc39872cd8"
+  },
+  {
+    "decimal": "15601964282531371467",
+    "little_endian_hex": "cb599d2ada4f85d8"
+  },
+  {
+    "decimal": "15618834647055687637",
+    "little_endian_hex": "d55f51ff5b3fc1d8"
+  },
+  {
+    "decimal": "15709701087036965130",
+    "little_endian_hex": "0a0168b4e71104da"
+  },
+  {
+    "decimal": "15762759133322046203",
+    "little_endian_hex": "fb6ab4c5ea91c0da"
+  },
+  {
+    "decimal": "15854464292279292104",
+    "little_endian_hex": "c8106cf5455f06dc"
+  },
+  {
+    "decimal": "16143622084178822777",
+    "little_endian_hex": "7946a1c3c0aa09e0"
+  },
+  {
+    "decimal": "16580789460192057549",
+    "little_endian_hex": "cdd8494e2acc1ae6"
+  },
+  {
+    "decimal": "16707197553437724842",
+    "little_endian_hex": "aa50ee04a8e3dbe7"
+  },
+  {
+    "decimal": "16810589275325017196",
+    "little_endian_hex": "6c2cbd2ce1354be9"
+  },
+  {
+    "decimal": "16866089336148769087",
+    "little_endian_hex": "3fb9260fe46210ea"
+  },
+  {
+    "decimal": "17110301032709883196",
+    "little_endian_hex": "3c05ac8e220074ed"
+  },
+  {
+    "decimal": "17122800066418283088",
+    "little_endian_hex": "5092e59ef067a0ed"
+  },
+  {
+    "decimal": "18446744073709551614",
+    "little_endian_hex": "feffffffffffffff"
+  },
+  {
+    "decimal": "18446744073709551615",
+    "little_endian_hex": "ffffffffffffffff"
+  }
+]

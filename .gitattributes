@@ -1,0 +1,4 @@
+# Preserve recorded benchmark bytes and binary interoperability fixtures.
+benchmarks/results/** -text
+tests/fixtures/*.bin binary
+*.csv whitespace=cr-at-eol

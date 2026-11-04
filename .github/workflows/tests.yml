@@ -1,0 +1,57 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.2', '8.3', '8.4', '8.5']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer validate --strict
+      - run: php -d ffi.enable=0 tests/run.php
+
+  native:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        php: ['8.2', '8.5']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ffi
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: bash tools/build-native.sh
+      - shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            export ROARING_LIBRARY="$PWD/.build/croaring/libroaring.dylib"
+          else
+            export ROARING_LIBRARY="$PWD/.build/croaring/libroaring.so"
+          fi
+          ROARING_REQUIRE_NATIVE=1 ROARING_REQUIRE_ORDER_INDEX=1 php -d ffi.enable=1 tests/run.php
+      - shell: bash
+        run: |
+          cc -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer \
+            -I.build/croaring tests/native-order.c -o .build/native-order-sanitized
+          .build/native-order-sanitized
+      - run: bash tools/build-native.sh --stock
+      - shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            export ROARING_LIBRARY="$PWD/.build/croaring/libroaring-stock.dylib"
+          else
+            export ROARING_LIBRARY="$PWD/.build/croaring/libroaring-stock.so"
+          fi
+          ROARING_REQUIRE_NATIVE=1 php -d ffi.enable=1 tests/run.php

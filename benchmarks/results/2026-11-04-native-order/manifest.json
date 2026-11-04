@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-04",
+  "timezone": "Europe/Amsterdam",
+  "upstream": "CRoaring 5.4.0",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+  "build_flags": [
+    "-O3",
+    "-std=c11",
+    "-dynamiclib",
+    "-fPIC"
+  ],
+  "files_sha256": {
+    ".build/croaring/roaring.c": "cdbd007b635b9bb2dc2074c69cb9f768e8aaf2dbe68f622c8643689b4e975dbc",
+    ".build/croaring/roaring.h": "b74054da2965baa17393c5ffa02bea587374fe33afcfff2c2d24dcf75fed419b",
+    ".build/croaring/libroaring-before-order.dylib": "5e175bfd410fdeee350e8eeda8f25ff006fd8e7b2a90c1da62e36e842a05ca1b",
+    ".build/croaring/libroaring.dylib": "95f4d4566e956bf60b8c9532a5dbaede5ca943bdb2cc3744616ae733b50df875",
+    "native/roaring-index.c": "77c32f1772f355574ed9e5b0d758f6d318425cdf75943f23254432afb76f0159",
+    "tools/build-native.sh": "9f6e7ba0a53d2b05914a67cc86798705396b055c2c6dfcf934b0dcf87562f3c1",
+    "benchmarks/results/2026-11-04-native-order/before-source.tar.gz": "c3fb47a5d3dfbedb46c1e5c8a76027accfc50347db0693098d3ab50ff6ac7a9e",
+    "benchmarks/results/2026-11-04-native-order/after-source.tar.gz": "a16b8c93568ebd7df461b24e3017a822c0acead8fbee065872cfd204549d926c"
+  },
+  "validation": {
+    "herd_php": [
+      "8.2.35",
+      "8.3.36",
+      "8.4.27",
+      "8.5.12"
+    ],
+    "indexed_and_stock": {
+      "tests": 51,
+      "assertions": 2891501
+    },
+    "ffi_disabled": {
+      "tests": 24,
+      "assertions": 1442624
+    },
+    "c_sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "composer_validate": "passed",
+    "hosted_ci": "not executed locally"
+  }
+}

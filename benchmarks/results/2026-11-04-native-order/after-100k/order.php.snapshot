@@ -1,0 +1,183 @@
+<?php
+
+declare(strict_types=1);
+
+use RoaringBitmap\Backend;
+use RoaringBitmap\Bitmap;
+use RoaringBitmap\Bitmap64;
+use RoaringBitmap\Exception\NativeBackendUnavailable;
+use RoaringBitmap\Internal\UInt64;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$options = getopt('', ['size:', 'queries:', 'samples:', 'library:', 'output:']);
+$size = (int) ($options['size'] ?? 100000);
+$queries = (int) ($options['queries'] ?? 1000);
+$samples = (int) ($options['samples'] ?? 5);
+if ($size < 5000 || $size > 1000000 || $queries < 1 || $queries > $size || $samples < 3 || $samples > 20) {
+    throw new InvalidArgumentException('Use size 5000..1000000, queries 1..size, and samples 3..20.');
+}
+$library = $options['library'] ?? (getenv('ROARING_LIBRARY') ?: dirname(__DIR__) . '/.build/croaring/libroaring.' . (PHP_OS_FAMILY === 'Darwin' ? 'dylib' : 'so'));
+$backends = [Backend::Php];
+try {
+    new Bitmap64(backend: Backend::Native, libraryPath: $library);
+    $backends[] = Backend::Native;
+} catch (NativeBackendUnavailable $error) {
+    if (getenv('ROARING_REQUIRE_NATIVE') === '1') {
+        throw $error;
+    }
+    echo "Native backend unavailable; benchmarking PHP only.\n";
+}
+$destination = isset($options['output']) ? rtrim($options['output'], '/') : null;
+if ($destination !== null && file_exists($destination . '/results.json')) {
+    throw new RuntimeException('Choose a new output directory to preserve previous measurements.');
+}
+
+/** Timing includes result collection; exact result verification happens after the timer. */
+function orderBatch(Bitmap|Bitmap64 $bitmap, string $method, array $arguments, array $expected): float
+{
+    $result = [];
+    $start = hrtime(true);
+    foreach ($arguments as $argument) {
+        $result[] = $bitmap->$method($argument);
+    }
+    $elapsed = (hrtime(true) - $start) / 1e6;
+    if ($result !== $expected) {
+        throw new RuntimeException("Incorrect $method benchmark results.");
+    }
+
+    return $elapsed;
+}
+
+function orderStats(array $values): array
+{
+    sort($values, SORT_NUMERIC);
+    $length = count($values);
+    $middle = intdiv($length, 2);
+
+    return ['median' => $length % 2 ? $values[$middle] : ($values[$middle - 1] + $values[$middle]) / 2,
+        'min' => $values[0], 'max' => $values[$length - 1]];
+}
+
+$root = dirname(__DIR__);
+$hashes = [];
+foreach (['src', 'native'] as $directory) {
+    $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root . '/' . $directory, FilesystemIterator::SKIP_DOTS));
+    foreach ($files as $file) {
+        if (in_array($file->getExtension(), ['php', 'c'], true)) {
+            $hashes[substr($file->getPathname(), strlen($root) + 1)] = hash_file('sha256', $file->getPathname());
+        }
+    }
+}
+$hashes['tools/build-native.sh'] = hash_file('sha256', $root . '/tools/build-native.sh');
+ksort($hashes);
+$document = [
+    'started_at' => (new DateTimeImmutable('now', new DateTimeZone('Europe/Amsterdam')))->format(DATE_ATOM),
+    'php' => PHP_VERSION, 'php_binary' => PHP_BINARY, 'os' => php_uname(),
+    'ini' => ['ffi.enable' => ini_get('ffi.enable'), 'opcache.enable_cli' => ini_get('opcache.enable_cli'),
+        'opcache.jit' => ini_get('opcache.jit'), 'memory_limit' => ini_get('memory_limit'), 'xdebug' => extension_loaded('xdebug')],
+    'library' => $library, 'library_sha256' => is_file($library) ? hash_file('sha256', $library) : null,
+    'benchmark_sha256' => hash_file('sha256', __FILE__), 'source_sha256' => $hashes,
+    'size' => $size, 'queries' => $queries, 'repetitions' => $samples, 'command' => $argv,
+    'method' => 'Sequential samples in one PHP process; fresh bitmaps per sample; source IDs generated before timing; no RSS comparison.',
+    'samples' => [],
+];
+$metrics = ['build_ms', 'cold_rank_batch_ms', 'warm_rank_batch_ms', 'warm_select_batch_ms', 'rank_after_remove_ms'];
+$lines = [
+    '# Rank/select and unsigned 64-bit benchmark', '',
+    "PHP " . PHP_VERSION . "; $size IDs per bitmap; $queries queries per batch; $samples samples per configuration.", '',
+    'Times are median milliseconds. Cold rank is the first batch after construction; warm rank repeats the same inputs. '
+        . 'Select is measured after a warmup batch. The last column is a single rank query after removing one ID.', '',
+    '| Workload | Backend | Build | Cold rank batch | Warm rank batch | Warm select batch | Rank after remove |',
+    '| --- | --- | ---: | ---: | ---: | ---: | ---: |',
+];
+$document['summary'] = [];
+foreach (['32-dense', '32-sparse', '64-dense', '64-sparse'] as $workload) {
+    $wide = str_starts_with($workload, '64');
+    $sparse = str_ends_with($workload, 'sparse');
+    $values = [];
+    for ($i = 0; $i < $size; ++$i) {
+        if ($wide) {
+            $high = 0x80000000 + ($sparse ? intdiv($i, 32) : 0);
+            $low = $sparse ? ($i % 32) * 2048 + (crc32(pack('V', $i)) & 2047) : 3 * $i;
+            $values[] = UInt64::decimal(UInt64::fromParts($high, $low));
+        } else {
+            $values[] = $sparse ? 2048 * $i + (crc32(pack('V', $i)) & 2047) : 3 * $i;
+        }
+    }
+    $positions = $probes = $expectedRanks = [];
+    for ($i = 0; $i < $queries; ++$i) {
+        $position = ($i * 48271 + intdiv($size, 2)) % $size;
+        $positions[] = $position;
+        $probes[] = $values[$position];
+        $expectedRanks[] = $position + 1;
+    }
+    $group = [];
+    for ($sample = 0; $sample < $samples; ++$sample) {
+        $order = $sample % 2 ? array_reverse($backends) : $backends;
+        foreach ($order as $backend) {
+            $class = $wide ? Bitmap64::class : Bitmap::class;
+            // Prime class loading separately without retaining a populated order index.
+            $prime = new $class([], $backend, $library);
+            unset($prime);
+            $start = hrtime(true);
+            $bitmap = new $class($values, $backend, $library);
+            $buildMs = (hrtime(true) - $start) / 1e6;
+            if (count($bitmap) !== $size || $bitmap->backend() !== $backend) {
+                throw new RuntimeException('Wrong construction result or backend.');
+            }
+            $coldRank = orderBatch($bitmap, 'rank', $probes, $expectedRanks);
+            $warmRank = orderBatch($bitmap, 'rank', $probes, $expectedRanks);
+            orderBatch($bitmap, 'select', $positions, $probes);
+            $select = orderBatch($bitmap, 'select', $positions, $probes);
+            $bitmap->remove($probes[0]);
+            $start = hrtime(true);
+            $rank = $bitmap->rank($probes[0]);
+            $rebuildMs = (hrtime(true) - $start) / 1e6;
+            if ($rank !== $positions[0]) {
+                throw new RuntimeException('Incorrect rank after mutation.');
+            }
+            $result = ['workload' => $workload, 'backend' => $backend->value, 'sample' => $sample + 1,
+                'build_ms' => $buildMs, 'cold_rank_batch_ms' => $coldRank, 'warm_rank_batch_ms' => $warmRank,
+                'warm_select_batch_ms' => $select, 'rank_after_remove_ms' => $rebuildMs];
+            $document['samples'][] = $result;
+            $group[$backend->value][] = $result;
+            unset($bitmap);
+        }
+    }
+    foreach ($group as $backend => $results) {
+        $summary = [];
+        foreach ($metrics as $metric) {
+            $summary[$metric] = orderStats(array_column($results, $metric));
+        }
+        $document['summary'][] = ['workload' => $workload, 'backend' => $backend, 'metrics' => $summary];
+        $row = "| $workload | $backend | " . implode(' | ', array_map(static fn (array $s): string => sprintf('%.4f', $s['median']), $summary)) . ' |';
+        $lines[] = $row;
+        echo $row, PHP_EOL;
+    }
+    unset($values);
+}
+$document['finished_at'] = (new DateTimeImmutable('now', new DateTimeZone('Europe/Amsterdam')))->format(DATE_ATOM);
+$lines = array_merge($lines, ['',
+    '32-bit dense IDs are `3*i`; sparse IDs are `2048*i + (crc32(pack("V", i)) & 2047)`. '
+        . '64-bit dense IDs start at `2^63`, with lower bits `3*i`; sparse IDs use upper words `0x80000000 + floor(i/32)` '
+        . 'and 32 lower-word IDs per bucket, spaced by 2048 with the same CRC-derived jitter. All input lists are sorted and unique.', '',
+    'Every 64-bit input/output ID is a decimal string above PHP_INT_MAX, so the measured public API includes exact conversion overhead. '
+        . 'Source-ID generation is outside construction timing. Query timings include collection of the returned results; '
+        . 'all results are checked exactly after timing.', '',
+    'Samples run sequentially in one process, with a fresh bitmap for each sample and alternating backend order. '
+        . 'These are focused CLI microbenchmarks, not HTTP latency, independent-process RSS measurements, or a rerun of the earlier set-algebra report. '
+        . 'Cold query batches include any lazy index construction. Native 64-bit queries can use the package C index when the loaded library provides it. '
+        . 'Raw samples, min/max ranges, runtime settings, and source hashes are in [results.json](results.json).', '',
+    'Reproduce from the package root:', '', '```sh',
+    'ROARING_REQUIRE_NATIVE=1 php -d ffi.enable=1 -d opcache.enable_cli=0 -d opcache.jit=disable -d memory_limit=1G benchmarks/order.php '
+        . "--size=$size --queries=$queries --samples=$samples --output=benchmarks/results/order-new-run", '```', '']);
+if ($destination !== null) {
+    if (!is_dir($destination) && !mkdir($destination, 0777, true) && !is_dir($destination)) {
+        throw new RuntimeException('Cannot create output directory.');
+    }
+    file_put_contents($destination . '/results.json', json_encode($document, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . PHP_EOL);
+    file_put_contents($destination . '/report.md', implode(PHP_EOL, $lines));
+    copy(__FILE__, $destination . '/order.php.snapshot');
+    echo "Report: $destination/report.md\n";
+}

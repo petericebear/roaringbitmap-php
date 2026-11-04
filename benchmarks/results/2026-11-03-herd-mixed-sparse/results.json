@@ -1,0 +1,2977 @@
+{
+  "started_at": "2026-11-03T09:16:40.325750+01:00",
+  "environment": {
+    "platform": "macOS-26.7.1-arm64-arm-64bit-Mach-O",
+    "architecture": "arm64",
+    "cpu": "Apple M4 Pro",
+    "logical_cpus": 14,
+    "ram_bytes": "51539607552",
+    "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin"
+  },
+  "repetitions": 5,
+  "sizes": [
+    100000,
+    1000000
+  ],
+  "workloads": [
+    "sparse_mixed"
+  ],
+  "target_ms": 25,
+  "native_library": "/Users/peter/Development/roaring-bitmap/.build/croaring/libroaring.dylib",
+  "native_library_sha256": "5e175bfd410fdeee350e8eeda8f25ff006fd8e7b2a90c1da62e36e842a05ca1b",
+  "source_sha256": {
+    "benchmarks/run.py": "17bfbe4abf4ea8e478bd7a81c0610828b9dd0f4ba359139678f7563bdb670f7d",
+    "benchmarks/worker.php": "1740d6b554f93239ae26acd81a8ba7ced99a2aa33a4fd53c86854da41f21c81c",
+    "src/Backend.php": "d7aa918a71ef1988ac43b05308b46035250e68515bf4ada4731211a668b3cdbd",
+    "src/Bitmap.php": "36a378d5f02b76a52842f4176e6d1ebdce23219c325e633bd606e796163fc822",
+    "src/Exception/NativeBackendUnavailable.php": "ba4ea2376dfb1ef077d2cac8790434aead4bcdabdbcb1b13ea30c59bfa7e1221",
+    "src/Internal/Container.php": "aac93fd53d88eb753a2f001c54e96766b79e0587d2940dc9781f986c7917527a",
+    "src/Internal/Engine.php": "f83ccde185b14c5ac5dffbdab97050c1031c5dfbbb7ca1183cd8726223d7e24e",
+    "src/Internal/NativeEngine.php": "448ada4872d56ef686503ad49ff76616fc824b8d329867dc952433d194c08e4b",
+    "src/Internal/NativeLibrary.php": "5188531743b449bef9f6ed393ad160bc6c2fcdca4a5bb2236761385d6c8e8d51",
+    "src/Internal/PhpEngine.php": "fa0a044cfef6ab35c9c6b9d4d4a0a7e9155a8179e64d83e920f124de2ffb16d2",
+    "src/Internal/PortableCodec.php": "4d74da482df09bad5c221567802ce06ad0f75066633cca625098a2f26a194c30",
+    "tools/build-native.sh": "ac8810a2e9507175cecd24c307262b08a11c22494f8af8a5e367cae389e82aeb",
+    ".build/croaring/roaring.c": "cdbd007b635b9bb2dc2074c69cb9f768e8aaf2dbe68f622c8643689b4e975dbc",
+    ".build/croaring/roaring.h": "b74054da2965baa17393c5ffa02bea587374fe33afcfff2c2d24dcf75fed419b"
+  },
+  "runner_command": [
+    "benchmarks/run.py",
+    "--sizes",
+    "100000",
+    "1000000",
+    "--workloads",
+    "sparse_mixed",
+    "--repetitions",
+    "5",
+    "--output",
+    "benchmarks/results/2026-11-03-herd-mixed-sparse"
+  ],
+  "samples": [
+    {
+      "backend": "array",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.003792,
+      "build_pair_ms": 23.385417,
+      "build_peak_rss_bytes": 40386560,
+      "initial_peak_rss_bytes": 29130752,
+      "build_php_heap_delta_bytes": 10485920,
+      "serialized_bytes": 1545759,
+      "serialization_format": "PHP serialize(integer-keyed set)",
+      "timings": {
+        "intersection": {
+          "ms": 0.5075135813953489,
+          "iterations": 43,
+          "batch_ms": 21.823084
+        },
+        "union": {
+          "ms": 1.3069232631578946,
+          "iterations": 19,
+          "batch_ms": 24.831542
+        },
+        "difference": {
+          "ms": 0.4854198653846154,
+          "iterations": 52,
+          "batch_ms": 25.241833
+        },
+        "contains_10000": {
+          "ms": 0.13397037572254333,
+          "iterations": 173,
+          "batch_ms": 23.176875
+        },
+        "iterate_all": {
+          "ms": 0.565831081081081,
+          "iterations": 37,
+          "batch_ms": 20.93575
+        },
+        "serialize": {
+          "ms": 0.8572902666666666,
+          "iterations": 30,
+          "batch_ms": 25.718708
+        },
+        "deserialize": {
+          "ms": 1.54261975,
+          "iterations": 16,
+          "batch_ms": 24.681916
+        }
+      },
+      "verified_checksums": true,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 1,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=array",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=1"
+      ]
+    },
+    {
+      "backend": "php",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.634042,
+      "build_pair_ms": 132.108125,
+      "build_peak_rss_bytes": 30244864,
+      "initial_peak_rss_bytes": 29130752,
+      "build_php_heap_delta_bytes": 1391312,
+      "serialized_bytes": 225008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 11.975305666666666,
+          "iterations": 3,
+          "batch_ms": 35.925917
+        },
+        "union": {
+          "ms": 12.148916666666667,
+          "iterations": 3,
+          "batch_ms": 36.44675
+        },
+        "difference": {
+          "ms": 10.043388666666667,
+          "iterations": 3,
+          "batch_ms": 30.130166
+        },
+        "contains_10000": {
+          "ms": 4.017017857142857,
+          "iterations": 7,
+          "batch_ms": 28.119125
+        },
+        "iterate_all": {
+          "ms": 11.689722000000002,
+          "iterations": 3,
+          "batch_ms": 35.069166
+        },
+        "serialize": {
+          "ms": 0.48956009615384616,
+          "iterations": 52,
+          "batch_ms": 25.457125
+        },
+        "deserialize": {
+          "ms": 5.3949168,
+          "iterations": 5,
+          "batch_ms": 26.974584
+        }
+      },
+      "verified_checksums": true,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 1,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=php",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=1"
+      ]
+    },
+    {
+      "backend": "native",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 1.0235,
+      "build_pair_ms": 35.252416,
+      "build_peak_rss_bytes": 30081024,
+      "initial_peak_rss_bytes": 29425664,
+      "build_php_heap_delta_bytes": 464,
+      "serialized_bytes": 225008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 0.07225501543209877,
+          "iterations": 324,
+          "batch_ms": 23.410625
+        },
+        "union": {
+          "ms": 0.1629092037037037,
+          "iterations": 162,
+          "batch_ms": 26.391291
+        },
+        "difference": {
+          "ms": 0.11783618721461188,
+          "iterations": 219,
+          "batch_ms": 25.806125
+        },
+        "contains_10000": {
+          "ms": 1.4777152777777778,
+          "iterations": 18,
+          "batch_ms": 26.598875
+        },
+        "iterate_all": {
+          "ms": 2.85655,
+          "iterations": 10,
+          "batch_ms": 28.5655
+        },
+        "serialize": {
+          "ms": 0.02080767922497309,
+          "iterations": 929,
+          "batch_ms": 19.330334
+        },
+        "deserialize": {
+          "ms": 5.8557584,
+          "iterations": 5,
+          "batch_ms": 29.278792
+        }
+      },
+      "verified_checksums": true,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 1,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=native",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=1"
+      ]
+    },
+    {
+      "backend": "php",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.615958,
+      "build_pair_ms": 132.323958,
+      "build_peak_rss_bytes": 30195712,
+      "initial_peak_rss_bytes": 29081600,
+      "build_php_heap_delta_bytes": 1391312,
+      "serialized_bytes": 225008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 12.243069666666665,
+          "iterations": 3,
+          "batch_ms": 36.729209
+        },
+        "union": {
+          "ms": 12.366944333333334,
+          "iterations": 3,
+          "batch_ms": 37.100833
+        },
+        "difference": {
+          "ms": 10.057569333333333,
+          "iterations": 3,
+          "batch_ms": 30.172708
+        },
+        "contains_10000": {
+          "ms": 4.144738142857142,
+          "iterations": 7,
+          "batch_ms": 29.013167
+        },
+        "iterate_all": {
+          "ms": 11.819361,
+          "iterations": 3,
+          "batch_ms": 35.458083
+        },
+        "serialize": {
+          "ms": 0.4907854468085106,
+          "iterations": 47,
+          "batch_ms": 23.066916
+        },
+        "deserialize": {
+          "ms": 5.2127918,
+          "iterations": 5,
+          "batch_ms": 26.063959
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 2,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=php",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "native",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.989875,
+      "build_pair_ms": 35.854375,
+      "build_peak_rss_bytes": 29949952,
+      "initial_peak_rss_bytes": 29310976,
+      "build_php_heap_delta_bytes": 464,
+      "serialized_bytes": 225008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 0.07324136414565827,
+          "iterations": 357,
+          "batch_ms": 26.147167
+        },
+        "union": {
+          "ms": 0.16906849315068495,
+          "iterations": 146,
+          "batch_ms": 24.684
+        },
+        "difference": {
+          "ms": 0.11430016836734694,
+          "iterations": 196,
+          "batch_ms": 22.402833
+        },
+        "contains_10000": {
+          "ms": 1.4747592777777778,
+          "iterations": 18,
+          "batch_ms": 26.545667
+        },
+        "iterate_all": {
+          "ms": 2.7810555555555556,
+          "iterations": 9,
+          "batch_ms": 25.0295
+        },
+        "serialize": {
+          "ms": 0.021486143023255817,
+          "iterations": 860,
+          "batch_ms": 18.478083
+        },
+        "deserialize": {
+          "ms": 5.4869168,
+          "iterations": 5,
+          "batch_ms": 27.434584
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 2,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=native",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "array",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.003917,
+      "build_pair_ms": 23.455709,
+      "build_peak_rss_bytes": 40337408,
+      "initial_peak_rss_bytes": 29081600,
+      "build_php_heap_delta_bytes": 10485920,
+      "serialized_bytes": 1545759,
+      "serialization_format": "PHP serialize(integer-keyed set)",
+      "timings": {
+        "intersection": {
+          "ms": 0.5170386341463414,
+          "iterations": 41,
+          "batch_ms": 21.198584
+        },
+        "union": {
+          "ms": 1.2658479,
+          "iterations": 20,
+          "batch_ms": 25.316958
+        },
+        "difference": {
+          "ms": 0.4995663265306123,
+          "iterations": 49,
+          "batch_ms": 24.47875
+        },
+        "contains_10000": {
+          "ms": 0.136771614973262,
+          "iterations": 187,
+          "batch_ms": 25.576292
+        },
+        "iterate_all": {
+          "ms": 0.802966125,
+          "iterations": 32,
+          "batch_ms": 25.694916
+        },
+        "serialize": {
+          "ms": 0.8680401785714286,
+          "iterations": 28,
+          "batch_ms": 24.305125
+        },
+        "deserialize": {
+          "ms": 1.5605650625,
+          "iterations": 16,
+          "batch_ms": 24.969041
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 2,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=array",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "native",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.96925,
+      "build_pair_ms": 35.7365,
+      "build_peak_rss_bytes": 30015488,
+      "initial_peak_rss_bytes": 29376512,
+      "build_php_heap_delta_bytes": 464,
+      "serialized_bytes": 225008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 0.07290431596091206,
+          "iterations": 307,
+          "batch_ms": 22.381625
+        },
+        "union": {
+          "ms": 0.16883152173913044,
+          "iterations": 138,
+          "batch_ms": 23.29875
+        },
+        "difference": {
+          "ms": 0.11391888888888889,
+          "iterations": 225,
+          "batch_ms": 25.63175
+        },
+        "contains_10000": {
+          "ms": 1.4842615555555556,
+          "iterations": 18,
+          "batch_ms": 26.716708
+        },
+        "iterate_all": {
+          "ms": 2.8115417000000003,
+          "iterations": 10,
+          "batch_ms": 28.115417
+        },
+        "serialize": {
+          "ms": 0.02177261292897047,
+          "iterations": 1253,
+          "batch_ms": 27.281084
+        },
+        "deserialize": {
+          "ms": 5.5516,
+          "iterations": 5,
+          "batch_ms": 27.758
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 3,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=native",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "array",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.003875,
+      "build_pair_ms": 23.323875,
+      "build_peak_rss_bytes": 40452096,
+      "initial_peak_rss_bytes": 29196288,
+      "build_php_heap_delta_bytes": 10485920,
+      "serialized_bytes": 1545759,
+      "serialization_format": "PHP serialize(integer-keyed set)",
+      "timings": {
+        "intersection": {
+          "ms": 0.5191581363636364,
+          "iterations": 44,
+          "batch_ms": 22.842958
+        },
+        "union": {
+          "ms": 1.2593392857142856,
+          "iterations": 21,
+          "batch_ms": 26.446125
+        },
+        "difference": {
+          "ms": 0.4930648148148148,
+          "iterations": 54,
+          "batch_ms": 26.6255
+        },
+        "contains_10000": {
+          "ms": 0.13422905759162304,
+          "iterations": 191,
+          "batch_ms": 25.63775
+        },
+        "iterate_all": {
+          "ms": 0.7693238285714286,
+          "iterations": 35,
+          "batch_ms": 26.926334
+        },
+        "serialize": {
+          "ms": 0.8506972333333334,
+          "iterations": 30,
+          "batch_ms": 25.520917
+        },
+        "deserialize": {
+          "ms": 1.4931348235294117,
+          "iterations": 17,
+          "batch_ms": 25.383292
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 3,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=array",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "php",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.544292,
+      "build_pair_ms": 130.857208,
+      "build_peak_rss_bytes": 30277632,
+      "initial_peak_rss_bytes": 29163520,
+      "build_php_heap_delta_bytes": 1391312,
+      "serialized_bytes": 225008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 12.306,
+          "iterations": 3,
+          "batch_ms": 36.918
+        },
+        "union": {
+          "ms": 13.2700835,
+          "iterations": 2,
+          "batch_ms": 26.540167
+        },
+        "difference": {
+          "ms": 10.376777666666667,
+          "iterations": 3,
+          "batch_ms": 31.130333
+        },
+        "contains_10000": {
+          "ms": 4.2244375,
+          "iterations": 6,
+          "batch_ms": 25.346625
+        },
+        "iterate_all": {
+          "ms": 12.560055333333333,
+          "iterations": 3,
+          "batch_ms": 37.680166
+        },
+        "serialize": {
+          "ms": 0.6059085217391305,
+          "iterations": 46,
+          "batch_ms": 27.871792
+        },
+        "deserialize": {
+          "ms": 5.4122834,
+          "iterations": 5,
+          "batch_ms": 27.061417
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 3,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=php",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "array",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.004416,
+      "build_pair_ms": 24.207833,
+      "build_peak_rss_bytes": 40288256,
+      "initial_peak_rss_bytes": 29032448,
+      "build_php_heap_delta_bytes": 10485920,
+      "serialized_bytes": 1545759,
+      "serialization_format": "PHP serialize(integer-keyed set)",
+      "timings": {
+        "intersection": {
+          "ms": 0.5649132972972973,
+          "iterations": 37,
+          "batch_ms": 20.901792
+        },
+        "union": {
+          "ms": 1.36856665,
+          "iterations": 20,
+          "batch_ms": 27.371333
+        },
+        "difference": {
+          "ms": 0.4990385283018868,
+          "iterations": 53,
+          "batch_ms": 26.449042
+        },
+        "contains_10000": {
+          "ms": 0.13212988826815644,
+          "iterations": 179,
+          "batch_ms": 23.65125
+        },
+        "iterate_all": {
+          "ms": 0.7526333333333334,
+          "iterations": 30,
+          "batch_ms": 22.579
+        },
+        "serialize": {
+          "ms": 0.8520653,
+          "iterations": 30,
+          "batch_ms": 25.561959
+        },
+        "deserialize": {
+          "ms": 1.5599632352941177,
+          "iterations": 17,
+          "batch_ms": 26.519375
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 4,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=array",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "php",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.661917,
+      "build_pair_ms": 132.753458,
+      "build_peak_rss_bytes": 30277632,
+      "initial_peak_rss_bytes": 29163520,
+      "build_php_heap_delta_bytes": 1391312,
+      "serialized_bytes": 225008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 12.060639,
+          "iterations": 3,
+          "batch_ms": 36.181917
+        },
+        "union": {
+          "ms": 12.043319333333335,
+          "iterations": 3,
+          "batch_ms": 36.129958
+        },
+        "difference": {
+          "ms": 10.524277666666666,
+          "iterations": 3,
+          "batch_ms": 31.572833
+        },
+        "contains_10000": {
+          "ms": 4.115784666666666,
+          "iterations": 6,
+          "batch_ms": 24.694708
+        },
+        "iterate_all": {
+          "ms": 11.863430333333334,
+          "iterations": 3,
+          "batch_ms": 35.590291
+        },
+        "serialize": {
+          "ms": 0.4991737358490566,
+          "iterations": 53,
+          "batch_ms": 26.456208
+        },
+        "deserialize": {
+          "ms": 5.3764082,
+          "iterations": 5,
+          "batch_ms": 26.882041
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 4,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=php",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "native",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.934583,
+      "build_pair_ms": 36.165583,
+      "build_peak_rss_bytes": 30081024,
+      "initial_peak_rss_bytes": 29409280,
+      "build_php_heap_delta_bytes": 464,
+      "serialized_bytes": 225008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 0.07256516569767442,
+          "iterations": 344,
+          "batch_ms": 24.962417
+        },
+        "union": {
+          "ms": 0.16992898113207547,
+          "iterations": 159,
+          "batch_ms": 27.018708
+        },
+        "difference": {
+          "ms": 0.11241120873786407,
+          "iterations": 206,
+          "batch_ms": 23.156709
+        },
+        "contains_10000": {
+          "ms": 1.4695162222222222,
+          "iterations": 18,
+          "batch_ms": 26.451292
+        },
+        "iterate_all": {
+          "ms": 2.88689575,
+          "iterations": 8,
+          "batch_ms": 23.095166
+        },
+        "serialize": {
+          "ms": 0.021279595061728395,
+          "iterations": 1215,
+          "batch_ms": 25.854708
+        },
+        "deserialize": {
+          "ms": 5.5254084,
+          "iterations": 5,
+          "batch_ms": 27.627042
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 4,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=native",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "php",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.614958,
+      "build_pair_ms": 131.00375,
+      "build_peak_rss_bytes": 30244864,
+      "initial_peak_rss_bytes": 29130752,
+      "build_php_heap_delta_bytes": 1391312,
+      "serialized_bytes": 225008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 11.997138999999999,
+          "iterations": 3,
+          "batch_ms": 35.991417
+        },
+        "union": {
+          "ms": 12.669167,
+          "iterations": 2,
+          "batch_ms": 25.338334
+        },
+        "difference": {
+          "ms": 10.368708333333332,
+          "iterations": 3,
+          "batch_ms": 31.106125
+        },
+        "contains_10000": {
+          "ms": 4.077934571428572,
+          "iterations": 7,
+          "batch_ms": 28.545542
+        },
+        "iterate_all": {
+          "ms": 11.457666666666666,
+          "iterations": 3,
+          "batch_ms": 34.373
+        },
+        "serialize": {
+          "ms": 0.5002708333333333,
+          "iterations": 48,
+          "batch_ms": 24.013
+        },
+        "deserialize": {
+          "ms": 5.460649999999999,
+          "iterations": 5,
+          "batch_ms": 27.30325
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 5,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=php",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "native",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 1.085667,
+      "build_pair_ms": 35.839375,
+      "build_peak_rss_bytes": 30048256,
+      "initial_peak_rss_bytes": 29392896,
+      "build_php_heap_delta_bytes": 464,
+      "serialized_bytes": 225008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 0.07279729141104294,
+          "iterations": 326,
+          "batch_ms": 23.731917
+        },
+        "union": {
+          "ms": 0.16823958333333333,
+          "iterations": 144,
+          "batch_ms": 24.2265
+        },
+        "difference": {
+          "ms": 0.11151598173515982,
+          "iterations": 219,
+          "batch_ms": 24.422
+        },
+        "contains_10000": {
+          "ms": 1.4378379444444445,
+          "iterations": 18,
+          "batch_ms": 25.881083
+        },
+        "iterate_all": {
+          "ms": 2.725740777777778,
+          "iterations": 9,
+          "batch_ms": 24.531667
+        },
+        "serialize": {
+          "ms": 0.020775608320251177,
+          "iterations": 1274,
+          "batch_ms": 26.468125
+        },
+        "deserialize": {
+          "ms": 5.4030666,
+          "iterations": 5,
+          "batch_ms": 27.015333
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 5,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=native",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "array",
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "initialization_ms": 0.004291,
+      "build_pair_ms": 24.587834,
+      "build_peak_rss_bytes": 40321024,
+      "initial_peak_rss_bytes": 29081600,
+      "build_php_heap_delta_bytes": 10485920,
+      "serialized_bytes": 1545759,
+      "serialization_format": "PHP serialize(integer-keyed set)",
+      "timings": {
+        "intersection": {
+          "ms": 0.520352564102564,
+          "iterations": 39,
+          "batch_ms": 20.29375
+        },
+        "union": {
+          "ms": 1.2989802631578946,
+          "iterations": 19,
+          "batch_ms": 24.680625
+        },
+        "difference": {
+          "ms": 0.4889199411764706,
+          "iterations": 51,
+          "batch_ms": 24.934917
+        },
+        "contains_10000": {
+          "ms": 0.13390958,
+          "iterations": 200,
+          "batch_ms": 26.781916
+        },
+        "iterate_all": {
+          "ms": 0.7752055666666667,
+          "iterations": 30,
+          "batch_ms": 23.256167
+        },
+        "serialize": {
+          "ms": 0.8137083103448276,
+          "iterations": 29,
+          "batch_ms": 23.597541
+        },
+        "deserialize": {
+          "ms": 1.626265625,
+          "iterations": 16,
+          "batch_ms": 26.02025
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 5,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=array",
+        "--workload=sparse_mixed",
+        "--size=100000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "array",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.004042,
+      "build_pair_ms": 265.857541,
+      "build_peak_rss_bytes": 112181248,
+      "initial_peak_rss_bytes": 29097984,
+      "build_php_heap_delta_bytes": 83886240,
+      "serialized_bytes": 16457479,
+      "serialization_format": "PHP serialize(integer-keyed set)",
+      "timings": {
+        "intersection": {
+          "ms": 7.33184375,
+          "iterations": 4,
+          "batch_ms": 29.327375
+        },
+        "union": {
+          "ms": 17.3207085,
+          "iterations": 2,
+          "batch_ms": 34.641417
+        },
+        "difference": {
+          "ms": 7.45914575,
+          "iterations": 4,
+          "batch_ms": 29.836583
+        },
+        "contains_10000": {
+          "ms": 0.13356751794871796,
+          "iterations": 195,
+          "batch_ms": 26.045666
+        },
+        "iterate_all": {
+          "ms": 5.57246875,
+          "iterations": 4,
+          "batch_ms": 22.289875
+        },
+        "serialize": {
+          "ms": 9.477625,
+          "iterations": 3,
+          "batch_ms": 28.432875
+        },
+        "deserialize": {
+          "ms": 20.4728955,
+          "iterations": 2,
+          "batch_ms": 40.945791
+        }
+      },
+      "verified_checksums": true,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 1,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=array",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=1"
+      ]
+    },
+    {
+      "backend": "php",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.574333,
+      "build_pair_ms": 1331.088292,
+      "build_peak_rss_bytes": 42614784,
+      "initial_peak_rss_bytes": 29147136,
+      "build_php_heap_delta_bytes": 13355584,
+      "serialized_bytes": 2250008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 121.98175,
+          "iterations": 1,
+          "batch_ms": 121.98175
+        },
+        "union": {
+          "ms": 124.74075,
+          "iterations": 1,
+          "batch_ms": 124.74075
+        },
+        "difference": {
+          "ms": 103.063042,
+          "iterations": 1,
+          "batch_ms": 103.063042
+        },
+        "contains_10000": {
+          "ms": 3.906113,
+          "iterations": 7,
+          "batch_ms": 27.342791
+        },
+        "iterate_all": {
+          "ms": 119.531084,
+          "iterations": 1,
+          "batch_ms": 119.531084
+        },
+        "serialize": {
+          "ms": 5.4685918000000004,
+          "iterations": 5,
+          "batch_ms": 27.342959
+        },
+        "deserialize": {
+          "ms": 53.0735,
+          "iterations": 1,
+          "batch_ms": 53.0735
+        }
+      },
+      "verified_checksums": true,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 1,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=php",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=1"
+      ]
+    },
+    {
+      "backend": "native",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.880958,
+      "build_pair_ms": 360.607083,
+      "build_peak_rss_bytes": 36061184,
+      "initial_peak_rss_bytes": 29409280,
+      "build_php_heap_delta_bytes": 464,
+      "serialized_bytes": 2250008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 0.7359452571428572,
+          "iterations": 35,
+          "batch_ms": 25.758084
+        },
+        "union": {
+          "ms": 1.7337944666666667,
+          "iterations": 15,
+          "batch_ms": 26.006917
+        },
+        "difference": {
+          "ms": 1.1713011363636363,
+          "iterations": 22,
+          "batch_ms": 25.768625
+        },
+        "contains_10000": {
+          "ms": 1.585638,
+          "iterations": 16,
+          "batch_ms": 25.370208
+        },
+        "iterate_all": {
+          "ms": 66.491083,
+          "iterations": 1,
+          "batch_ms": 66.491083
+        },
+        "serialize": {
+          "ms": 0.3701746031746032,
+          "iterations": 63,
+          "batch_ms": 23.321
+        },
+        "deserialize": {
+          "ms": 54.225875,
+          "iterations": 1,
+          "batch_ms": 54.225875
+        }
+      },
+      "verified_checksums": true,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 1,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=native",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=1"
+      ]
+    },
+    {
+      "backend": "php",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.684708,
+      "build_pair_ms": 1347.41025,
+      "build_peak_rss_bytes": 42582016,
+      "initial_peak_rss_bytes": 29114368,
+      "build_php_heap_delta_bytes": 13355584,
+      "serialized_bytes": 2250008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 122.799958,
+          "iterations": 1,
+          "batch_ms": 122.799958
+        },
+        "union": {
+          "ms": 127.119958,
+          "iterations": 1,
+          "batch_ms": 127.119958
+        },
+        "difference": {
+          "ms": 105.681833,
+          "iterations": 1,
+          "batch_ms": 105.681833
+        },
+        "contains_10000": {
+          "ms": 3.974726142857143,
+          "iterations": 7,
+          "batch_ms": 27.823083
+        },
+        "iterate_all": {
+          "ms": 122.834708,
+          "iterations": 1,
+          "batch_ms": 122.834708
+        },
+        "serialize": {
+          "ms": 5.4084916,
+          "iterations": 5,
+          "batch_ms": 27.042458
+        },
+        "deserialize": {
+          "ms": 53.645666,
+          "iterations": 1,
+          "batch_ms": 53.645666
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 2,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=php",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "native",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.906875,
+      "build_pair_ms": 362.900541,
+      "build_peak_rss_bytes": 35962880,
+      "initial_peak_rss_bytes": 29327360,
+      "build_php_heap_delta_bytes": 464,
+      "serialized_bytes": 2250008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 0.73006509375,
+          "iterations": 32,
+          "batch_ms": 23.362083
+        },
+        "union": {
+          "ms": 1.7670861333333332,
+          "iterations": 15,
+          "batch_ms": 26.506292
+        },
+        "difference": {
+          "ms": 1.1521964285714286,
+          "iterations": 21,
+          "batch_ms": 24.196125
+        },
+        "contains_10000": {
+          "ms": 1.5530703125,
+          "iterations": 16,
+          "batch_ms": 24.849125
+        },
+        "iterate_all": {
+          "ms": 65.60175,
+          "iterations": 1,
+          "batch_ms": 65.60175
+        },
+        "serialize": {
+          "ms": 0.368625,
+          "iterations": 60,
+          "batch_ms": 22.1175
+        },
+        "deserialize": {
+          "ms": 54.671916,
+          "iterations": 1,
+          "batch_ms": 54.671916
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 2,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=native",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "array",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.004041,
+      "build_pair_ms": 274.101875,
+      "build_peak_rss_bytes": 112197632,
+      "initial_peak_rss_bytes": 29114368,
+      "build_php_heap_delta_bytes": 83886240,
+      "serialized_bytes": 16457479,
+      "serialization_format": "PHP serialize(integer-keyed set)",
+      "timings": {
+        "intersection": {
+          "ms": 8.369,
+          "iterations": 3,
+          "batch_ms": 25.107
+        },
+        "union": {
+          "ms": 18.145104,
+          "iterations": 2,
+          "batch_ms": 36.290208
+        },
+        "difference": {
+          "ms": 8.040486333333334,
+          "iterations": 3,
+          "batch_ms": 24.121459
+        },
+        "contains_10000": {
+          "ms": 0.13188601036269432,
+          "iterations": 193,
+          "batch_ms": 25.454
+        },
+        "iterate_all": {
+          "ms": 6.92145825,
+          "iterations": 4,
+          "batch_ms": 27.685833
+        },
+        "serialize": {
+          "ms": 9.686777666666666,
+          "iterations": 3,
+          "batch_ms": 29.060333
+        },
+        "deserialize": {
+          "ms": 18.945875,
+          "iterations": 2,
+          "batch_ms": 37.89175
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 2,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=array",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "native",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.926208,
+      "build_pair_ms": 366.900416,
+      "build_peak_rss_bytes": 36044800,
+      "initial_peak_rss_bytes": 29376512,
+      "build_php_heap_delta_bytes": 464,
+      "serialized_bytes": 2250008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 0.700942411764706,
+          "iterations": 34,
+          "batch_ms": 23.832042
+        },
+        "union": {
+          "ms": 1.7247388666666665,
+          "iterations": 15,
+          "batch_ms": 25.871083
+        },
+        "difference": {
+          "ms": 1.13928475,
+          "iterations": 24,
+          "batch_ms": 27.342834
+        },
+        "contains_10000": {
+          "ms": 1.5496979375,
+          "iterations": 16,
+          "batch_ms": 24.795167
+        },
+        "iterate_all": {
+          "ms": 67.253292,
+          "iterations": 1,
+          "batch_ms": 67.253292
+        },
+        "serialize": {
+          "ms": 0.376268693877551,
+          "iterations": 49,
+          "batch_ms": 18.437166
+        },
+        "deserialize": {
+          "ms": 54.6225,
+          "iterations": 1,
+          "batch_ms": 54.6225
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 3,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=native",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "array",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.004208,
+      "build_pair_ms": 280.769834,
+      "build_peak_rss_bytes": 112181248,
+      "initial_peak_rss_bytes": 29097984,
+      "build_php_heap_delta_bytes": 83886240,
+      "serialized_bytes": 16457479,
+      "serialization_format": "PHP serialize(integer-keyed set)",
+      "timings": {
+        "intersection": {
+          "ms": 7.68528125,
+          "iterations": 4,
+          "batch_ms": 30.741125
+        },
+        "union": {
+          "ms": 16.753167,
+          "iterations": 2,
+          "batch_ms": 33.506334
+        },
+        "difference": {
+          "ms": 7.417448,
+          "iterations": 4,
+          "batch_ms": 29.669792
+        },
+        "contains_10000": {
+          "ms": 0.13833164646464646,
+          "iterations": 198,
+          "batch_ms": 27.389666
+        },
+        "iterate_all": {
+          "ms": 7.48480225,
+          "iterations": 4,
+          "batch_ms": 29.939209
+        },
+        "serialize": {
+          "ms": 9.365485999999999,
+          "iterations": 3,
+          "batch_ms": 28.096458
+        },
+        "deserialize": {
+          "ms": 18.379521,
+          "iterations": 2,
+          "batch_ms": 36.759042
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 3,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=array",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "php",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.6785,
+      "build_pair_ms": 1345.476666,
+      "build_peak_rss_bytes": 42598400,
+      "initial_peak_rss_bytes": 29130752,
+      "build_php_heap_delta_bytes": 13355584,
+      "serialized_bytes": 2250008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 123.05975,
+          "iterations": 1,
+          "batch_ms": 123.05975
+        },
+        "union": {
+          "ms": 127.669208,
+          "iterations": 1,
+          "batch_ms": 127.669208
+        },
+        "difference": {
+          "ms": 103.070667,
+          "iterations": 1,
+          "batch_ms": 103.070667
+        },
+        "contains_10000": {
+          "ms": 4.045595285714286,
+          "iterations": 7,
+          "batch_ms": 28.319167
+        },
+        "iterate_all": {
+          "ms": 116.989166,
+          "iterations": 1,
+          "batch_ms": 116.989166
+        },
+        "serialize": {
+          "ms": 5.5052,
+          "iterations": 5,
+          "batch_ms": 27.526
+        },
+        "deserialize": {
+          "ms": 53.707541,
+          "iterations": 1,
+          "batch_ms": 53.707541
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 3,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=php",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "array",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.003625,
+      "build_pair_ms": 249.212458,
+      "build_peak_rss_bytes": 112181248,
+      "initial_peak_rss_bytes": 29097984,
+      "build_php_heap_delta_bytes": 83886240,
+      "serialized_bytes": 16457479,
+      "serialization_format": "PHP serialize(integer-keyed set)",
+      "timings": {
+        "intersection": {
+          "ms": 8.861903,
+          "iterations": 3,
+          "batch_ms": 26.585709
+        },
+        "union": {
+          "ms": 18.0841875,
+          "iterations": 2,
+          "batch_ms": 36.168375
+        },
+        "difference": {
+          "ms": 8.01634375,
+          "iterations": 4,
+          "batch_ms": 32.065375
+        },
+        "contains_10000": {
+          "ms": 0.13783514130434782,
+          "iterations": 184,
+          "batch_ms": 25.361666
+        },
+        "iterate_all": {
+          "ms": 6.3704583999999995,
+          "iterations": 5,
+          "batch_ms": 31.852292
+        },
+        "serialize": {
+          "ms": 9.686694333333334,
+          "iterations": 3,
+          "batch_ms": 29.060083
+        },
+        "deserialize": {
+          "ms": 19.8994585,
+          "iterations": 2,
+          "batch_ms": 39.798917
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 4,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=array",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "php",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.595792,
+      "build_pair_ms": 1362.360458,
+      "build_peak_rss_bytes": 42565632,
+      "initial_peak_rss_bytes": 29097984,
+      "build_php_heap_delta_bytes": 13355584,
+      "serialized_bytes": 2250008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 124.269375,
+          "iterations": 1,
+          "batch_ms": 124.269375
+        },
+        "union": {
+          "ms": 129.078458,
+          "iterations": 1,
+          "batch_ms": 129.078458
+        },
+        "difference": {
+          "ms": 105.083792,
+          "iterations": 1,
+          "batch_ms": 105.083792
+        },
+        "contains_10000": {
+          "ms": 3.9910714285714284,
+          "iterations": 7,
+          "batch_ms": 27.9375
+        },
+        "iterate_all": {
+          "ms": 121.427458,
+          "iterations": 1,
+          "batch_ms": 121.427458
+        },
+        "serialize": {
+          "ms": 5.43135,
+          "iterations": 5,
+          "batch_ms": 27.15675
+        },
+        "deserialize": {
+          "ms": 54.920916,
+          "iterations": 1,
+          "batch_ms": 54.920916
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 4,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=php",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "native",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.946791,
+      "build_pair_ms": 367.108042,
+      "build_peak_rss_bytes": 36028416,
+      "initial_peak_rss_bytes": 29376512,
+      "build_php_heap_delta_bytes": 464,
+      "serialized_bytes": 2250008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 0.715475,
+          "iterations": 35,
+          "batch_ms": 25.041625
+        },
+        "union": {
+          "ms": 1.7212500000000002,
+          "iterations": 15,
+          "batch_ms": 25.81875
+        },
+        "difference": {
+          "ms": 1.1803035714285715,
+          "iterations": 21,
+          "batch_ms": 24.786375
+        },
+        "contains_10000": {
+          "ms": 1.564127625,
+          "iterations": 16,
+          "batch_ms": 25.026042
+        },
+        "iterate_all": {
+          "ms": 65.872375,
+          "iterations": 1,
+          "batch_ms": 65.872375
+        },
+        "serialize": {
+          "ms": 0.3552387619047619,
+          "iterations": 63,
+          "batch_ms": 22.380042
+        },
+        "deserialize": {
+          "ms": 55.840834,
+          "iterations": 1,
+          "batch_ms": 55.840834
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 4,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=native",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "php",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.569042,
+      "build_pair_ms": 1350.324167,
+      "build_peak_rss_bytes": 42614784,
+      "initial_peak_rss_bytes": 29147136,
+      "build_php_heap_delta_bytes": 13355584,
+      "serialized_bytes": 2250008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 124.17175,
+          "iterations": 1,
+          "batch_ms": 124.17175
+        },
+        "union": {
+          "ms": 127.652625,
+          "iterations": 1,
+          "batch_ms": 127.652625
+        },
+        "difference": {
+          "ms": 104.973875,
+          "iterations": 1,
+          "batch_ms": 104.973875
+        },
+        "contains_10000": {
+          "ms": 4.045815571428571,
+          "iterations": 7,
+          "batch_ms": 28.320709
+        },
+        "iterate_all": {
+          "ms": 122.2765,
+          "iterations": 1,
+          "batch_ms": 122.2765
+        },
+        "serialize": {
+          "ms": 5.6353,
+          "iterations": 5,
+          "batch_ms": 28.1765
+        },
+        "deserialize": {
+          "ms": 51.468208,
+          "iterations": 1,
+          "batch_ms": 51.468208
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 5,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=php",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "native",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.897417,
+      "build_pair_ms": 366.636541,
+      "build_peak_rss_bytes": 36077568,
+      "initial_peak_rss_bytes": 29425664,
+      "build_php_heap_delta_bytes": 464,
+      "serialized_bytes": 2250008,
+      "serialization_format": "Roaring 32-bit portable",
+      "timings": {
+        "intersection": {
+          "ms": 0.7375428823529412,
+          "iterations": 34,
+          "batch_ms": 25.076458
+        },
+        "union": {
+          "ms": 1.7327972,
+          "iterations": 15,
+          "batch_ms": 25.991958
+        },
+        "difference": {
+          "ms": 1.122850409090909,
+          "iterations": 22,
+          "batch_ms": 24.702709
+        },
+        "contains_10000": {
+          "ms": 1.5763671875,
+          "iterations": 16,
+          "batch_ms": 25.221875
+        },
+        "iterate_all": {
+          "ms": 65.502584,
+          "iterations": 1,
+          "batch_ms": 65.502584
+        },
+        "serialize": {
+          "ms": 0.37701894545454545,
+          "iterations": 55,
+          "batch_ms": 20.736042
+        },
+        "deserialize": {
+          "ms": 56.008083,
+          "iterations": 1,
+          "batch_ms": 56.008083
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 5,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=native",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    },
+    {
+      "backend": "array",
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "initialization_ms": 0.003791,
+      "build_pair_ms": 280.172958,
+      "build_peak_rss_bytes": 112181248,
+      "initial_peak_rss_bytes": 29097984,
+      "build_php_heap_delta_bytes": 83886240,
+      "serialized_bytes": 16457479,
+      "serialization_format": "PHP serialize(integer-keyed set)",
+      "timings": {
+        "intersection": {
+          "ms": 9.05570825,
+          "iterations": 4,
+          "batch_ms": 36.222833
+        },
+        "union": {
+          "ms": 17.595479,
+          "iterations": 2,
+          "batch_ms": 35.190958
+        },
+        "difference": {
+          "ms": 7.74903125,
+          "iterations": 4,
+          "batch_ms": 30.996125
+        },
+        "contains_10000": {
+          "ms": 0.13534942758620688,
+          "iterations": 145,
+          "batch_ms": 19.625667
+        },
+        "iterate_all": {
+          "ms": 5.7971832,
+          "iterations": 5,
+          "batch_ms": 28.985916
+        },
+        "serialize": {
+          "ms": 9.412833333333333,
+          "iterations": 3,
+          "batch_ms": 28.2385
+        },
+        "deserialize": {
+          "ms": 20.412125,
+          "iterations": 2,
+          "batch_ms": 40.82425
+        }
+      },
+      "verified_checksums": false,
+      "runtime": {
+        "php": "8.4.27",
+        "binary": "/Users/peter/Library/Application Support/Herd/bin/php84",
+        "os_family": "Darwin",
+        "int_bytes": 8,
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G",
+        "xdebug": false
+      },
+      "repetition": 5,
+      "command": [
+        "/Users/peter/Library/Application Support/Herd/bin/php",
+        "-d",
+        "ffi.enable=1",
+        "-d",
+        "opcache.enable_cli=0",
+        "-d",
+        "opcache.jit=disable",
+        "-d",
+        "memory_limit=1G",
+        "/Users/peter/Development/roaring-bitmap/benchmarks/worker.php",
+        "--backend=array",
+        "--workload=sparse_mixed",
+        "--size=1000000",
+        "--target-ms=25",
+        "--verify=0"
+      ]
+    }
+  ],
+  "finished_at": "2026-11-03T09:17:15.079716+01:00",
+  "summary": [
+    {
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "backend": "array",
+      "samples": 5,
+      "metrics": {
+        "build_pair_ms": {
+          "median": 23.455709,
+          "min": 23.323875,
+          "max": 24.587834,
+          "mean": 23.7921336,
+          "stdev": 0.5709227483633844
+        },
+        "intersection_ms": {
+          "median": 0.5191581363636364,
+          "min": 0.5075135813953489,
+          "max": 0.5649132972972973,
+          "mean": 0.5257952426610376,
+          "stdev": 0.022443225368317193
+        },
+        "union_ms": {
+          "median": 1.2989802631578946,
+          "min": 1.2593392857142856,
+          "max": 1.36856665,
+          "mean": 1.299931472406015,
+          "stdev": 0.043502853552042774
+        },
+        "difference_ms": {
+          "median": 0.4930648148148148,
+          "min": 0.4854198653846154,
+          "max": 0.4995663265306123,
+          "mean": 0.49320189524167996,
+          "stdev": 0.006194477005108599
+        },
+        "contains_10000_ms": {
+          "median": 0.13397037572254333,
+          "min": 0.13212988826815644,
+          "max": 0.136771614973262,
+          "mean": 0.13420210331111695,
+          "stdev": 0.0016610583570619867
+        },
+        "iterate_all_ms": {
+          "median": 0.7693238285714286,
+          "min": 0.565831081081081,
+          "max": 0.802966125,
+          "mean": 0.7331919869305019,
+          "stdev": 0.0952978488249434
+        },
+        "serialize_ms": {
+          "median": 0.8520653,
+          "min": 0.8137083103448276,
+          "max": 0.8680401785714286,
+          "mean": 0.8483602577832512,
+          "stdev": 0.02053649553058931
+        },
+        "deserialize_ms": {
+          "median": 1.5599632352941177,
+          "min": 1.4931348235294117,
+          "max": 1.626265625,
+          "mean": 1.5565096992647058,
+          "stdev": 0.047706308865559315
+        },
+        "build_peak_rss_bytes": {
+          "median": 40337408,
+          "min": 40288256,
+          "max": 40452096,
+          "mean": 40357068.8,
+          "stdev": 63876.59141814003
+        },
+        "serialized_bytes": {
+          "median": 1545759,
+          "min": 1545759,
+          "max": 1545759,
+          "mean": 1545759,
+          "stdev": 0.0
+        },
+        "initialization_ms": {
+          "median": 0.003917,
+          "min": 0.003792,
+          "max": 0.004416,
+          "mean": 0.0040582,
+          "stdev": 0.00027684779211689577
+        },
+        "build_php_heap_delta_bytes": {
+          "median": 10485920,
+          "min": 10485920,
+          "max": 10485920,
+          "mean": 10485920,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "backend": "native",
+      "samples": 5,
+      "metrics": {
+        "build_pair_ms": {
+          "median": 35.839375,
+          "min": 35.252416,
+          "max": 36.165583,
+          "mean": 35.769649799999996,
+          "stdev": 0.33069350424328003
+        },
+        "intersection_ms": {
+          "median": 0.07279729141104294,
+          "min": 0.07225501543209877,
+          "max": 0.07324136414565827,
+          "mean": 0.0727526305294773,
+          "stdev": 0.00036967129329277886
+        },
+        "union_ms": {
+          "median": 0.16883152173913044,
+          "min": 0.1629092037037037,
+          "max": 0.16992898113207547,
+          "mean": 0.16779555661178558,
+          "stdev": 0.0027981554563981294
+        },
+        "difference_ms": {
+          "median": 0.11391888888888889,
+          "min": 0.11151598173515982,
+          "max": 0.11783618721461188,
+          "mean": 0.11399648698877432,
+          "stdev": 0.002424229522709884
+        },
+        "contains_10000_ms": {
+          "median": 1.4747592777777778,
+          "min": 1.4378379444444445,
+          "max": 1.4842615555555556,
+          "mean": 1.4688180555555557,
+          "stdev": 0.018119154906939425
+        },
+        "iterate_all_ms": {
+          "median": 2.8115417000000003,
+          "min": 2.725740777777778,
+          "max": 2.88689575,
+          "mean": 2.8123567566666665,
+          "stdev": 0.0632294662137726
+        },
+        "serialize_ms": {
+          "median": 0.021279595061728395,
+          "min": 0.020775608320251177,
+          "max": 0.02177261292897047,
+          "mean": 0.02122432771183579,
+          "stdev": 0.0004321930906943047
+        },
+        "deserialize_ms": {
+          "median": 5.5254084,
+          "min": 5.4030666,
+          "max": 5.8557584,
+          "mean": 5.56455004,
+          "stdev": 0.17219603784561366
+        },
+        "build_peak_rss_bytes": {
+          "median": 30048256,
+          "min": 29949952,
+          "max": 30081024,
+          "mean": 30035148.8,
+          "stdev": 54831.351498937176
+        },
+        "serialized_bytes": {
+          "median": 225008,
+          "min": 225008,
+          "max": 225008,
+          "mean": 225008,
+          "stdev": 0.0
+        },
+        "initialization_ms": {
+          "median": 0.989875,
+          "min": 0.934583,
+          "max": 1.085667,
+          "mean": 1.000575,
+          "stdev": 0.057482375077061644
+        },
+        "build_php_heap_delta_bytes": {
+          "median": 464,
+          "min": 464,
+          "max": 464,
+          "mean": 464,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "workload": "sparse_mixed",
+      "size": 100000,
+      "backend": "php",
+      "samples": 5,
+      "metrics": {
+        "build_pair_ms": {
+          "median": 132.108125,
+          "min": 130.857208,
+          "max": 132.753458,
+          "mean": 131.8092998,
+          "stdev": 0.8368084526217416
+        },
+        "intersection_ms": {
+          "median": 12.060639,
+          "min": 11.975305666666666,
+          "max": 12.306,
+          "mean": 12.116430666666666,
+          "stdev": 0.14935983888917387
+        },
+        "union_ms": {
+          "median": 12.366944333333334,
+          "min": 12.043319333333335,
+          "max": 13.2700835,
+          "mean": 12.499686166666667,
+          "stdev": 0.4927388068460079
+        },
+        "difference_ms": {
+          "median": 10.368708333333332,
+          "min": 10.043388666666667,
+          "max": 10.524277666666666,
+          "mean": 10.274144333333334,
+          "stdev": 0.2134218498510245
+        },
+        "contains_10000_ms": {
+          "median": 4.115784666666666,
+          "min": 4.017017857142857,
+          "max": 4.2244375,
+          "mean": 4.115982547619048,
+          "stdev": 0.07718655738462851
+        },
+        "iterate_all_ms": {
+          "median": 11.819361,
+          "min": 11.457666666666666,
+          "max": 12.560055333333333,
+          "mean": 11.878047066666667,
+          "stdev": 0.41260725592110487
+        },
+        "serialize_ms": {
+          "median": 0.4991737358490566,
+          "min": 0.48956009615384616,
+          "max": 0.6059085217391305,
+          "mean": 0.5171397267767754,
+          "stdev": 0.04985584081387207
+        },
+        "deserialize_ms": {
+          "median": 5.3949168,
+          "min": 5.2127918,
+          "max": 5.460649999999999,
+          "mean": 5.37141004,
+          "stdev": 0.09403682450012858
+        },
+        "build_peak_rss_bytes": {
+          "median": 30244864,
+          "min": 30195712,
+          "max": 30277632,
+          "mean": 30248140.8,
+          "stdev": 33577.208269896415
+        },
+        "serialized_bytes": {
+          "median": 225008,
+          "min": 225008,
+          "max": 225008,
+          "mean": 225008,
+          "stdev": 0.0
+        },
+        "initialization_ms": {
+          "median": 0.615958,
+          "min": 0.544292,
+          "max": 0.661917,
+          "mean": 0.6142334,
+          "stdev": 0.04347817000288765
+        },
+        "build_php_heap_delta_bytes": {
+          "median": 1391312,
+          "min": 1391312,
+          "max": 1391312,
+          "mean": 1391312,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "backend": "array",
+      "samples": 5,
+      "metrics": {
+        "build_pair_ms": {
+          "median": 274.101875,
+          "min": 249.212458,
+          "max": 280.769834,
+          "mean": 270.0229332,
+          "stdev": 13.09182012444296
+        },
+        "intersection_ms": {
+          "median": 8.369,
+          "min": 7.33184375,
+          "max": 9.05570825,
+          "mean": 8.26074725,
+          "stdev": 0.74146691002193
+        },
+        "union_ms": {
+          "median": 17.595479,
+          "min": 16.753167,
+          "max": 18.145104,
+          "mean": 17.5797292,
+          "stdev": 0.5754719130008209
+        },
+        "difference_ms": {
+          "median": 7.74903125,
+          "min": 7.417448,
+          "max": 8.040486333333334,
+          "mean": 7.736491016666667,
+          "stdev": 0.29563355940574093
+        },
+        "contains_10000_ms": {
+          "median": 0.13534942758620688,
+          "min": 0.13188601036269432,
+          "max": 0.13833164646464646,
+          "mean": 0.1353939487333227,
+          "stdev": 0.0027492249946608734
+        },
+        "iterate_all_ms": {
+          "median": 6.3704583999999995,
+          "min": 5.57246875,
+          "max": 7.48480225,
+          "mean": 6.42927417,
+          "stdev": 0.7895407705070626
+        },
+        "serialize_ms": {
+          "median": 9.477625,
+          "min": 9.365485999999999,
+          "max": 9.686777666666666,
+          "mean": 9.525883266666666,
+          "stdev": 0.15213779773310063
+        },
+        "deserialize_ms": {
+          "median": 19.8994585,
+          "min": 18.379521,
+          "max": 20.4728955,
+          "mean": 19.621975,
+          "stdev": 0.9255002653576737
+        },
+        "build_peak_rss_bytes": {
+          "median": 112181248,
+          "min": 112181248,
+          "max": 112197632,
+          "mean": 112184524.8,
+          "stdev": 7327.147548671311
+        },
+        "serialized_bytes": {
+          "median": 16457479,
+          "min": 16457479,
+          "max": 16457479,
+          "mean": 16457479,
+          "stdev": 0.0
+        },
+        "initialization_ms": {
+          "median": 0.004041,
+          "min": 0.003625,
+          "max": 0.004208,
+          "mean": 0.0039414,
+          "stdev": 0.00023121699764506922
+        },
+        "build_php_heap_delta_bytes": {
+          "median": 83886240,
+          "min": 83886240,
+          "max": 83886240,
+          "mean": 83886240,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "backend": "native",
+      "samples": 5,
+      "metrics": {
+        "build_pair_ms": {
+          "median": 366.636541,
+          "min": 360.607083,
+          "max": 367.108042,
+          "mean": 364.8305246,
+          "stdev": 2.9281191402095286
+        },
+        "intersection_ms": {
+          "median": 0.73006509375,
+          "min": 0.700942411764706,
+          "max": 0.7375428823529412,
+          "mean": 0.7239941290021008,
+          "stdev": 0.015550016243690585
+        },
+        "union_ms": {
+          "median": 1.7327972,
+          "min": 1.7212500000000002,
+          "max": 1.7670861333333332,
+          "mean": 1.7359333333333333,
+          "stdev": 0.01820592892762616
+        },
+        "difference_ms": {
+          "median": 1.1521964285714286,
+          "min": 1.122850409090909,
+          "max": 1.1803035714285715,
+          "mean": 1.1531872590909091,
+          "stdev": 0.02333448583485786
+        },
+        "contains_10000_ms": {
+          "median": 1.564127625,
+          "min": 1.5496979375,
+          "max": 1.585638,
+          "mean": 1.5657802125,
+          "stdev": 0.01524244023013185
+        },
+        "iterate_all_ms": {
+          "median": 65.872375,
+          "min": 65.502584,
+          "max": 67.253292,
+          "mean": 66.1442168,
+          "stdev": 0.7297644831250027
+        },
+        "serialize_ms": {
+          "median": 0.3701746031746032,
+          "min": 0.3552387619047619,
+          "max": 0.37701894545454545,
+          "mean": 0.3694652008822923,
+          "stdev": 0.008759956180194563
+        },
+        "deserialize_ms": {
+          "median": 54.671916,
+          "min": 54.225875,
+          "max": 56.008083,
+          "mean": 55.0738416,
+          "stdev": 0.7977131561020527
+        },
+        "build_peak_rss_bytes": {
+          "median": 36044800,
+          "min": 35962880,
+          "max": 36077568,
+          "mean": 36034969.6,
+          "stdev": 44267.13034295311
+        },
+        "serialized_bytes": {
+          "median": 2250008,
+          "min": 2250008,
+          "max": 2250008,
+          "mean": 2250008,
+          "stdev": 0.0
+        },
+        "initialization_ms": {
+          "median": 0.906875,
+          "min": 0.880958,
+          "max": 0.946791,
+          "mean": 0.9116498000000001,
+          "stdev": 0.02556463877507368
+        },
+        "build_php_heap_delta_bytes": {
+          "median": 464,
+          "min": 464,
+          "max": 464,
+          "mean": 464,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "workload": "sparse_mixed",
+      "size": 1000000,
+      "backend": "php",
+      "samples": 5,
+      "metrics": {
+        "build_pair_ms": {
+          "median": 1347.41025,
+          "min": 1331.088292,
+          "max": 1362.360458,
+          "mean": 1347.3319666,
+          "stdev": 11.203950755329581
+        },
+        "intersection_ms": {
+          "median": 123.05975,
+          "min": 121.98175,
+          "max": 124.269375,
+          "mean": 123.2565166,
+          "stdev": 0.9664014499046429
+        },
+        "union_ms": {
+          "median": 127.652625,
+          "min": 124.74075,
+          "max": 129.078458,
+          "mean": 127.2521998,
+          "stdev": 1.580689974688017
+        },
+        "difference_ms": {
+          "median": 104.973875,
+          "min": 103.063042,
+          "max": 105.681833,
+          "mean": 104.3746418,
+          "stdev": 1.2238635117829537
+        },
+        "contains_10000_ms": {
+          "median": 3.9910714285714284,
+          "min": 3.906113,
+          "max": 4.045815571428571,
+          "mean": 3.9926642857142856,
+          "stdev": 0.05797022760848526
+        },
+        "iterate_all_ms": {
+          "median": 121.427458,
+          "min": 116.989166,
+          "max": 122.834708,
+          "mean": 120.6117832,
+          "stdev": 2.3806127472054768
+        },
+        "serialize_ms": {
+          "median": 5.4685918000000004,
+          "min": 5.4084916,
+          "max": 5.6353,
+          "mean": 5.48978668,
+          "stdev": 0.08928137441634737
+        },
+        "deserialize_ms": {
+          "median": 53.645666,
+          "min": 51.468208,
+          "max": 54.920916,
+          "mean": 53.3631662,
+          "stdev": 1.2549659025691497
+        },
+        "build_peak_rss_bytes": {
+          "median": 42598400,
+          "min": 42565632,
+          "max": 42614784,
+          "mean": 42595123.2,
+          "stdev": 21362.12244136804
+        },
+        "serialized_bytes": {
+          "median": 2250008,
+          "min": 2250008,
+          "max": 2250008,
+          "mean": 2250008,
+          "stdev": 0.0
+        },
+        "initialization_ms": {
+          "median": 0.595792,
+          "min": 0.569042,
+          "max": 0.684708,
+          "mean": 0.620475,
+          "stdev": 0.056737260808043935
+        },
+        "build_php_heap_delta_bytes": {
+          "median": 13355584,
+          "min": 13355584,
+          "max": 13355584,
+          "mean": 13355584,
+          "stdev": 0.0
+        }
+      }
+    }
+  ]
+}
