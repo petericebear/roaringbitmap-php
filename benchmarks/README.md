@@ -6,6 +6,9 @@ The `benchmarks` job runs after both test matrices pass on `main`, only when ini
 
 - Set algebra, construction, memory, and serialization: PHP arrays, package PHP, and native acceleration, using dense, mixed sparse, and range inputs (54 isolated-process samples).
 - Rank/select: PHP and accelerated native mode, plus stock native mode, for both widths and dense/sparse inputs (72 samples with fresh bitmaps).
+- Partial sparse intersections: all three backends, with 1,048,576 IDs/input and 32, 256, or 4,096 IDs per container (27 samples). Every container partially overlaps, so the identical-container shortcut cannot apply. This check uses one process and prepares inputs outside the timers.
+
+Together these produce 153 samples per CI bundle. The partial-overlap check uses its fixed input size even when smaller sizes are selected for a local harness check.
 
 One `benchmark-<run-id>-<attempt>` artifact contains `report.md`, `summary.json`, the individual reports/raw JSON, set-operation CSV, harness snapshots, and exact package sources. The README shows the largest tested size, while the full artifact covers both sizes, cold and warm queries, mutation costs, and all operations. Results identify the measured commit, PHP/runtime settings, runner, library hashes, and source hashes. Shared CI machines vary; compare modes within a run and inspect sample ranges before interpreting small changes between runs. These measurements are not HTTP latency or universal speedup claims.
 
@@ -33,6 +36,8 @@ python3 benchmarks/ci.py --sizes 100000 1000000 --samples 3 --output .build/ci-b
 For a quick end-to-end harness check, use `--sizes 10000 --workloads dense --samples 3` with a new output directory. The artifact/README maintenance script refuses live changes outside an authorized main-branch CI context. Its cleanup and publication tests use mocked GitHub data.
 
 ## Local benchmarks
+
+The [November 4 bulk loading and sparse operations report](results/2026-11-04-bulk-comparison/report.md) compares the original and optimized implementations across 234 samples, including shuffled input and partial sparse overlap. It includes source snapshots and the cases where arrays still outperform the PHP backend.
 
 Read the [November 3, 2026 Herd measurement report](MEASUREMENTS.md) for measured results, tradeoffs, and links to all original samples.
 

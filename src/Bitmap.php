@@ -61,7 +61,9 @@ final class Bitmap implements Countable, IteratorAggregate
             if (!is_int($value)) {
                 throw new InvalidArgumentException('Bitmap values must be integers.');
             }
-            self::validateValue($value);
+            if ($value < 0 || $value > self::MAX_VALUE) {
+                throw new InvalidArgumentException('Bitmap values must be between 0 and 4294967295.');
+            }
             $batch[] = $value;
             if (count($batch) === 1024) {
                 $this->engine->addMany($batch);

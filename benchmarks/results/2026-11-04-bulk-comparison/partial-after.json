@@ -1,0 +1,288 @@
+{
+    "php": "8.4.27",
+    "php_binary": "\/Users\/peter\/Library\/Application Support\/Herd\/bin\/php84",
+    "os": "Darwin Peter-Steenbergen 25.6.0 Darwin Kernel Version 25.6.0: Tue Aug 18 17:48:46 PDT 2026; root:xnu-12377.161.15.700.19~2\/RELEASE_ARM64_T6041 arm64",
+    "started_at": "2026-11-04T09:49:51+00:00",
+    "source_directory": "\/Users\/peter\/Development\/roaring-bitmap\/src",
+    "source_sha256": {
+        "Backend.php": "d7aa918a71ef1988ac43b05308b46035250e68515bf4ada4731211a668b3cdbd",
+        "Bitmap.php": "7ae40af678ce192d43cf23945b828112cfdead8c0525654d9b8f44b69e509871",
+        "Bitmap64.php": "4d50949b4280855a51bc07705cf004bb8eec8ed7956c35382d77609f942e1a30",
+        "Exception\/NativeBackendUnavailable.php": "ba4ea2376dfb1ef077d2cac8790434aead4bcdabdbcb1b13ea30c59bfa7e1221",
+        "Internal\/Container.php": "eb72377cb1d43e45f9cedf465a055e6440c8afd8436ae5441df1c5d0c0b931e0",
+        "Internal\/Engine.php": "b5d5cdc4c91fd840dce5dd2e17288c0649379e6b31573be666b7e81b5d402913",
+        "Internal\/Engine64.php": "6d2540669b516ab8e0ba87a519f46015989880129534537d89bde030eef59381",
+        "Internal\/NativeEngine.php": "aff5566ea7de6f0732fca5d20d54be3905867b2596c94cc2f2044a865fbe20ba",
+        "Internal\/NativeEngine64.php": "82e48071e9f9a9a3ee5d256d737e1b787d5b1b54fc5d3e68a35c390c1aeb7152",
+        "Internal\/NativeLibrary.php": "b304a2c43369bd6958e375373bdf6080c44a72401e17a4b0ea495efbb290490e",
+        "Internal\/PhpEngine.php": "ca17de42b21e5b5680df219a23186c47bf91fdd1a5420d7e9efb7382ab625802",
+        "Internal\/PhpEngine64.php": "f8f018f3abd2278c37fb549a2eea246a46754cea30016d14b8dbde7e03d2b9b7",
+        "Internal\/PortableCodec.php": "1340816446a1d1eb985728bc7343bf9360ded03a2767f5fbf9224e722d4fe42e",
+        "Internal\/PortableCodec64.php": "b79049f45d1b17a4fa1f7671d3003b9797f7305f93439b60c46d71d2ae6927a5",
+        "Internal\/PrefixIndex.php": "06d44e01d674f9127848f37f839e6c32ccb0370762568838c889083902d6e1ea",
+        "Internal\/UInt64.php": "e9860d2b6450aec15d85ef0674d640c63340ce54c9d6f57deb6e6d67c75b02b1"
+    },
+    "harness_sha256": "9631a01b1fd1ab6e37add4eaae7889a7c2729d27e74878b45d4d3c369642a2b6",
+    "command": [
+        "benchmarks\/sparse-intersection.php",
+        "--output=benchmarks\/results\/2026-11-04-bulk-comparison\/partial-after.json"
+    ],
+    "library_sha256": "95f4d4566e956bf60b8c9532a5dbaede5ca943bdb2cc3744616ae733b50df875",
+    "ini": {
+        "ffi.enable": "1",
+        "opcache.enable_cli": "0",
+        "opcache.jit": "disable",
+        "memory_limit": "1G"
+    },
+    "ids_per_input": 1048576,
+    "repetitions": 3,
+    "method": "Sequential warmed intersections in one process; inputs built outside timers; result allocation and destruction included. Every container partially overlaps; none has identical contents. A deterministic CRC-based rotation of low bits avoids concentrating array keys in a few hash buckets. No construction\/RSS claim.",
+    "samples": [
+        {
+            "backend": "array",
+            "container_cardinality": 32,
+            "sample": 1,
+            "intersection_ms": 16.612917
+        },
+        {
+            "backend": "array",
+            "container_cardinality": 32,
+            "sample": 2,
+            "intersection_ms": 12.949625
+        },
+        {
+            "backend": "array",
+            "container_cardinality": 32,
+            "sample": 3,
+            "intersection_ms": 13.913417
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 32,
+            "sample": 1,
+            "intersection_ms": 58.214458
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 32,
+            "sample": 2,
+            "intersection_ms": 59.878625
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 32,
+            "sample": 3,
+            "intersection_ms": 58.539
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 32,
+            "sample": 1,
+            "intersection_ms": 4.0635
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 32,
+            "sample": 2,
+            "intersection_ms": 3.67325
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 32,
+            "sample": 3,
+            "intersection_ms": 3.751
+        },
+        {
+            "backend": "array",
+            "container_cardinality": 256,
+            "sample": 1,
+            "intersection_ms": 9.373459
+        },
+        {
+            "backend": "array",
+            "container_cardinality": 256,
+            "sample": 2,
+            "intersection_ms": 8.227167
+        },
+        {
+            "backend": "array",
+            "container_cardinality": 256,
+            "sample": 3,
+            "intersection_ms": 9.367917
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 256,
+            "sample": 1,
+            "intersection_ms": 46.799166
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 256,
+            "sample": 2,
+            "intersection_ms": 42.921917
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 256,
+            "sample": 3,
+            "intersection_ms": 43.844334
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 256,
+            "sample": 1,
+            "intersection_ms": 2.94475
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 256,
+            "sample": 2,
+            "intersection_ms": 2.544375
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 256,
+            "sample": 3,
+            "intersection_ms": 2.634042
+        },
+        {
+            "backend": "array",
+            "container_cardinality": 4096,
+            "sample": 1,
+            "intersection_ms": 9.618334
+        },
+        {
+            "backend": "array",
+            "container_cardinality": 4096,
+            "sample": 2,
+            "intersection_ms": 7.179375
+        },
+        {
+            "backend": "array",
+            "container_cardinality": 4096,
+            "sample": 3,
+            "intersection_ms": 6.686375
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 4096,
+            "sample": 1,
+            "intersection_ms": 41.853125
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 4096,
+            "sample": 2,
+            "intersection_ms": 42.543584
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 4096,
+            "sample": 3,
+            "intersection_ms": 41.619875
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 4096,
+            "sample": 1,
+            "intersection_ms": 2.527375
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 4096,
+            "sample": 2,
+            "intersection_ms": 2.263958
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 4096,
+            "sample": 3,
+            "intersection_ms": 2.279042
+        }
+    ],
+    "summary": [
+        {
+            "backend": "array",
+            "container_cardinality": 32,
+            "intersection_ms": {
+                "median": 13.913417,
+                "min": 12.949625,
+                "max": 16.612917
+            }
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 32,
+            "intersection_ms": {
+                "median": 58.539,
+                "min": 58.214458,
+                "max": 59.878625
+            }
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 32,
+            "intersection_ms": {
+                "median": 3.751,
+                "min": 3.67325,
+                "max": 4.0635
+            }
+        },
+        {
+            "backend": "array",
+            "container_cardinality": 256,
+            "intersection_ms": {
+                "median": 9.367917,
+                "min": 8.227167,
+                "max": 9.373459
+            }
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 256,
+            "intersection_ms": {
+                "median": 43.844334,
+                "min": 42.921917,
+                "max": 46.799166
+            }
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 256,
+            "intersection_ms": {
+                "median": 2.634042,
+                "min": 2.544375,
+                "max": 2.94475
+            }
+        },
+        {
+            "backend": "array",
+            "container_cardinality": 4096,
+            "intersection_ms": {
+                "median": 7.179375,
+                "min": 6.686375,
+                "max": 9.618334
+            }
+        },
+        {
+            "backend": "php",
+            "container_cardinality": 4096,
+            "intersection_ms": {
+                "median": 41.853125,
+                "min": 41.619875,
+                "max": 42.543584
+            }
+        },
+        {
+            "backend": "native",
+            "container_cardinality": 4096,
+            "intersection_ms": {
+                "median": 2.279042,
+                "min": 2.263958,
+                "max": 2.527375
+            }
+        }
+    ],
+    "finished_at": "2026-11-04T09:49:54+00:00"
+}

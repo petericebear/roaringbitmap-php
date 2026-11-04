@@ -49,6 +49,16 @@ def render_tables(summary, sizes):
             native = indexed["64-sparse", "native"][metric]["median"]
             direct = stock["64-sparse", "native"][metric]["median"]
             lines.append(f"| {size:,} | {label} | {php:.4f} | {direct:.4f} | {native:.4f} | {direct/native:.2f}× |")
+    partial = summary["partial_sparse"]
+    rows = {(r["container_cardinality"], r["backend"]): r["intersection_ms"]["median"] for r in partial["summary"]}
+    lines += [
+        "", f"Partial overlap inside every sparse container ({partial['ids_per_input']:,} IDs/input): "
+        "warm intersection time in milliseconds. These inputs cannot use the identical-container shortcut.", "",
+        "| IDs/container | PHP array | Package PHP | Native accelerator |",
+        "| ---: | ---: | ---: | ---: |",
+    ]
+    for width in (32, 256, 4096):
+        lines.append(f"| {width:,} | {rows[width, 'array']:.3f} | {rows[width, 'php']:.3f} | {rows[width, 'native']:.3f} |")
     return "\n".join(lines)
 
 
@@ -82,6 +92,9 @@ def run_bundle(destination, sizes, repetitions, workloads, php):
                 raise RuntimeError(f"Wrong native capabilities/backends in {mode} measurement.")
             orders[str(size)][mode] = result["summary"]
 
+    run([php, *flags, str(ROOT / "benchmarks/sparse-intersection.php"),
+         f"--samples={repetitions}", f"--output={destination / 'partial-sparse.json'}"])
+    partial = load(destination / "partial-sparse.json")
     repository = os.environ.get("GITHUB_REPOSITORY", "petericebear/roaringbitmap-php")
     sha = os.environ.get("GITHUB_SHA") or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     run_id = os.environ.get("GITHUB_RUN_ID")
@@ -100,6 +113,8 @@ def run_bundle(destination, sizes, repetitions, workloads, php):
         "sets": sets["summary"], "order": orders,
         "set_samples": len(sets["samples"]),
         "order_samples": len(sizes) * 4 * 3 * repetitions,
+        "partial_sparse": partial,
+        "partial_sparse_samples": len(partial["samples"]),
         "source_sha256": {},
     }
     # Include exact sources so an artifact remains useful after later package changes.
@@ -107,7 +122,7 @@ def run_bundle(destination, sizes, repetitions, workloads, php):
     for directory in ("src", "native"):
         shutil.copytree(ROOT / directory, source_dir / directory)
     for name in ("composer.json", "LICENSE", "tools/build-native.sh", "benchmarks/ci.py",
-                 "benchmarks/run.py", "benchmarks/worker.php", "benchmarks/order.php"):
+                 "benchmarks/run.py", "benchmarks/worker.php", "benchmarks/order.php", "benchmarks/sparse-intersection.php"):
         target = source_dir / name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / name, target)
@@ -119,8 +134,9 @@ def run_bundle(destination, sizes, repetitions, workloads, php):
     intro = (f"Measured {summary['measured_at']} with PHP {summary['php']} on "
              f"{summary['environment']['platform']}; {repetitions} samples per configuration. "
              f"Source: [{sha[:7]}]({server}/{repository}/commit/{sha}).")
-    notes = ("These are synthetic CLI workloads on shared hardware. Set-algebra samples use fresh processes; "
-             "order samples use fresh bitmaps in one process per mode/size. Input generation is included in set construction "
+    notes = ("These are synthetic CLI workloads on shared hardware. The construction/set-algebra suite uses fresh processes. "
+             "The partial-overlap check times warm intersections in one process, with inputs prepared beforehand. "
+             "Order samples use fresh bitmaps in one process per mode/size. Input generation is included in set construction "
              "and excluded in order construction. Native mode is required; exact-result checks run outside the timers. "
              "Cold queries, mutation costs, other operations, settings, hashes, and sample ranges are retained in the full reports. "
              "Compare backends within the same run; CI host variation can affect comparisons between runs.")
@@ -130,6 +146,7 @@ def run_bundle(destination, sizes, repetitions, workloads, php):
               "## Full reports and data", "", "- [Set algebra, construction, memory, and persistence](sets/report.md)",
               "- [Set samples](sets/results.json) and [CSV](sets/summary.csv)",
               "- [Combined summary and provenance](summary.json)", "- Exact implementation and harnesses: source/", ""]
+    report.append("- [Partial sparse intersection samples and provenance](partial-sparse.json)")
     for size in sizes:
         for mode in ("indexed", "stock"):
             report.append(f"- [{mode} order queries, {size:,} IDs](order-{mode}-{size}/report.md) "

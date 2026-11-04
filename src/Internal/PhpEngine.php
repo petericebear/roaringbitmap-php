@@ -41,8 +41,19 @@ final class PhpEngine implements Engine
 
     public function addMany(array $values): void
     {
+        $groups = [];
         foreach ($values as $value) {
-            $this->add($value);
+            $groups[$value >> 16][] = $value & 0xffff;
+        }
+        foreach ($groups as $key => $lows) {
+            $container = $this->containers[$key] ??= Container::empty();
+            $before = $container->count();
+            $container->addMany($lows);
+            $added = $container->count() - $before;
+            $this->cardinality += $added;
+            if ($added !== 0) {
+                $this->index = null;
+            }
         }
     }
 

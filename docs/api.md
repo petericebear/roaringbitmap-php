@@ -103,4 +103,6 @@ The format reader supports array, bitset, and run containers. It checks lengths,
 
 PHP stores sparse containers as little-endian packed 16-bit values and promotes them to 8,192-byte bitsets above 4,096 entries. It demotes them when they become sparse again. Dense bitwise operations use PHP string operators. PHP writes array/bitset containers and expands imported run containers into those representations. Native mode can retain run compression. Both outputs describe the same sets and are interoperable, but their bytes and sizes can differ.
 
+Bulk insertion groups each validated batch by container. Sparse bulk updates and set operations use temporary PHP hashes, bounded by the participating containers and input batch, then repack the result. Small updates use incremental insertion. Identical containers can be cloned for union/intersection or omitted for difference/XOR. Persistent storage remains packed arrays and bitsets.
+
 Large ranges and imported runs can consume much more memory in PHP than in native mode. Iteration takes a snapshot, and `toArray()` adds the overhead of a PHP array. Deserialization performs PHP validation even when native mode is selected, so its cost includes a temporary PHP representation. Apply application-level resource limits when accepting large external bitmaps.

@@ -105,6 +105,8 @@ Performance depends on ID distribution, operation, and backend. PHP arrays can b
 
 The results below compare PHP arrays, the package's PHP backend, and native acceleration. They also compare stock CRoaring with the native order index for sparse 64-bit rank/select. CI refreshes these measurements automatically; [benchmark documentation](benchmarks/README.md) covers methodology and reproduction.
 
+The [bulk loading and sparse operations report](benchmarks/results/2026-11-04-bulk-comparison/report.md) compares package revisions, including partial-overlap workloads where PHP arrays remain faster than the PHP backend.
+
 <details>
 <summary>Latest benchmark results and downloads</summary>
 

@@ -324,6 +324,7 @@ test('all 65536 container keys', static function (): void {
 });
 
 require __DIR__ . '/order.php';
+require __DIR__ . '/bulk.php';
 require __DIR__ . '/bitmap64.php';
 require __DIR__ . '/native-order.php';
 

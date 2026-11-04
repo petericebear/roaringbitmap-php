@@ -153,6 +153,52 @@ final class Container
         return true;
     }
 
+    /** @param list<int> $values Validated low 16-bit values in any order. */
+    public function addMany(array $values): void
+    {
+        if ($values === []) {
+            return;
+        }
+        $before = $this->cardinality;
+        if ($before <= 4096 && $before > count($values) * 8) {
+            // Scattered batches may touch only a few IDs in an existing container.
+            // Insert those directly instead of unpacking and sorting the whole set.
+            foreach ($values as $value) {
+                $this->add($value);
+            }
+
+            return;
+        }
+        if ($before > 4096) {
+            foreach ($values as $value) {
+                $index = $value >> 3;
+                $byte = ord($this->data[$index]);
+                $updated = $byte | (1 << ($value & 7));
+                if ($byte !== $updated) {
+                    $this->data[$index] = chr($updated);
+                    ++$this->cardinality;
+                }
+            }
+        } else {
+            // Temporary hashes are bounded by one container plus one input batch.
+            $unique = array_fill_keys($values, true);
+            if ($before !== 0) {
+                $unique += array_fill_keys(unpack('v*', $this->data), true);
+            }
+            if (count($unique) === $before) {
+                return;
+            }
+            $sorted = array_keys($unique);
+            sort($sorted, SORT_NUMERIC);
+            $result = self::fromSortedValues($sorted);
+            $this->data = $result->data;
+            $this->cardinality = $result->cardinality;
+        }
+        if ($before !== $this->cardinality) {
+            $this->bitsetPrefix = null;
+        }
+    }
+
     public function remove(int $value): bool
     {
         if ($this->cardinality > 4096) {
@@ -221,43 +267,28 @@ final class Container
 
     public function combine(self $other, string $operation): self
     {
+        if ($this->cardinality === $other->cardinality && $this->data === $other->data) {
+            return match ($operation) {
+                'union', 'intersect' => clone $this,
+                'difference', 'xor' => self::empty(),
+            };
+        }
         if ($this->cardinality <= 4096 && $other->cardinality <= 4096) {
-            // Merge sorted arrays without allocating a PHP hash entry per value.
-            $result = self::empty();
-            $left = $right = 0;
-            $packed = '';
-            while ($left < $this->cardinality || $right < $other->cardinality) {
-                $a = $left < $this->cardinality ? $this->at($left) : 65536;
-                $b = $right < $other->cardinality ? $other->at($right) : 65536;
-                $include = match ($operation) {
-                    'union' => true,
-                    'intersect' => $a === $b,
-                    'difference' => $a < $b,
-                    'xor' => $a !== $b,
-                };
-                if ($include) {
-                    $packed .= pack('v', min($a, $b));
-                }
-                if ($a <= $b) {
-                    ++$left;
-                }
-                if ($b <= $a) {
-                    ++$right;
-                }
-            }
-            $result->data = $packed;
-            $result->cardinality = intdiv(strlen($packed), 2);
-            if ($result->cardinality > 4096) {
-                $bits = str_repeat("\0", 8192);
-                for ($i = 0; $i < $result->cardinality; ++$i) {
-                    $value = $result->at($i);
-                    $index = $value >> 3;
-                    $bits[$index] = chr(ord($bits[$index]) | (1 << ($value & 7)));
-                }
-                $result->data = $bits;
+            // Do the per-value work in PHP's C array functions, then repack.
+            // Neither temporary hash survives the operation.
+            $a = array_fill_keys(unpack('v*', $this->data), true);
+            $b = array_fill_keys(unpack('v*', $other->data), true);
+            $values = array_keys(match ($operation) {
+                'union' => $a + $b,
+                'intersect' => array_intersect_key($a, $b),
+                'difference' => array_diff_key($a, $b),
+                'xor' => array_diff_key($a, $b) + array_diff_key($b, $a),
+            });
+            if ($operation === 'union' || $operation === 'xor') {
+                sort($values, SORT_NUMERIC);
             }
 
-            return $result;
+            return self::fromSortedValues($values);
         }
 
         $a = $this->bitset();
@@ -269,6 +300,22 @@ final class Container
             'difference' => $a & ~$b,
             'xor' => $a ^ $b,
         });
+    }
+
+    /** @param list<int> $values Sorted, unique low 16-bit values. */
+    private static function fromSortedValues(array $values): self
+    {
+        $count = count($values);
+        if ($count <= 4096) {
+            return new self(pack('v*', ...$values), $count);
+        }
+        $bits = str_repeat("\0", 8192);
+        foreach ($values as $value) {
+            $index = $value >> 3;
+            $bits[$index] = chr(ord($bits[$index]) | (1 << ($value & 7)));
+        }
+
+        return new self($bits, $count);
     }
 
     private function bitset(): string

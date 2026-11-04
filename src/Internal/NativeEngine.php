@@ -67,9 +67,8 @@ final class NativeEngine implements Engine
             return;
         }
         $buffer = $this->ffi->new("uint32_t[$count]");
-        foreach ($values as $i => $value) {
-            $buffer[$i] = $value;
-        }
+        // L is a 32-bit unsigned value in machine byte order, matching uint32_t.
+        FFI::memcpy($buffer, pack('L*', ...$values), $count * 4);
         $this->ffi->roaring_bitmap_add_many($this->bitmap, $count, $buffer);
     }
 
