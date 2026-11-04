@@ -115,28 +115,52 @@ The [bulk loading and sparse operations report](benchmarks/results/2026-11-04-bu
 <summary>Latest benchmark results and downloads</summary>
 
 <!-- benchmark:latest:start -->
-Measured 2026-11-04T15:49:49.697638+01:00 with PHP 8.4.27 on Linux-7.0.0-1017-azure-x86_64-with-glibc2.39; 3 samples per configuration. Source: [e0a948a](https://github.com/petericebear/roaringbitmap-php/commit/e0a948ac4077c4cacca67fd1c387c49c09d4154e).
+Measured 2026-11-04T17:03:22.980476+01:00 with PHP 8.4.27 on Linux-7.0.0-1017-azure-x86_64-with-glibc2.39; 3 samples per configuration. Source: [47be656](https://github.com/petericebear/roaringbitmap-php/commit/47be656bace84b3e50047caaa886f7b56c329492).
+
+Array → bitmap → add one → array, compared with appending directly to an existing, unshared PHP list. Input creation is excluded. The new ID is absent and greater than all existing IDs.
+
+| Workload | IDs | Array append (µs) | PHP round trip (ms) | Native round trip (ms) |
+| --- | ---: | ---: | ---: | ---: |
+| dense32 | 1,000,000 | 0.371 | 278.942 | 132.916 |
+| sparse32 | 1,000,000 | 0.401 | 254.077 | 213.642 |
+| dense64 | 1,000,000 | 0.451 | 643.377 | 195.139 |
+| sparse64 | 1,000,000 | 0.531 | 893.347 | 224.408 |
+
+External input is a **saved Base64 bitmap**, not JSON. Both approaches below decode the same saved value with the stated backend and return the same typed array. Complete times are milliseconds; storage/network I/O is excluded.
+
+| Workload | IDs | Backend | Decode → bitmap add → array (ms) | Decode → array → append (ms) |
+| --- | ---: | --- | ---: | ---: |
+| dense32 | 1,000,000 | Package PHP | 100.549 | 98.963 |
+| dense32 | 1,000,000 | Native accelerator | 72.617 | 71.398 |
+| sparse32 | 1,000,000 | Package PHP | 202.799 | 202.152 |
+| sparse32 | 1,000,000 | Native accelerator | 218.741 | 218.687 |
+| dense64 | 1,000,000 | Package PHP | 211.885 | 213.864 |
+| dense64 | 1,000,000 | Native accelerator | 106.909 | 107.588 |
+| sparse64 | 1,000,000 | Package PHP | 310.489 | 311.389 |
+| sparse64 | 1,000,000 | Native accelerator | 186.630 | 186.769 |
+
+`Bitmap64::toArray()` returns decimal strings; the original PHP-list baseline retains integers. The full report separately measures conversion back to integers for fixtures within PHP_INT_MAX. Append permits duplicates; these fixtures add a known-new ID. Medians below 0.1 µs are shown as <0.1, not zero. Single append timings include the timer floor and are not throughput measurements. Saved-bitmap timings include public format validation and complete array materialization.
 
 Membership updates: build one set, then add one new ID. In-memory additions are in **microseconds**; construction and restore → add → save are in **milliseconds**. The saved cycle includes Base64 and rewrites the entire snapshot; database/network time is excluded.
 
 | Workload | Existing IDs | Backend | Build (ms) | Add one in memory (µs) | Restore + add + save (ms) | Saved Base64 (KiB) |
 | --- | ---: | --- | ---: | ---: | ---: | ---: |
-| dense32 | 1,000,000 | PHP list (no dedup) | 122.240 | 0.100 | 138.276 | 23871.55 |
-| dense32 | 1,000,000 | PHP array set | 146.853 | 0.080 | 110.673 | 17505.80 |
-| dense32 | 1,000,000 | Package PHP | 317.713 | 0.381 | 0.247 | 331.00 |
-| dense32 | 1,000,000 | Native accelerator | 160.301 | 0.361 | 0.414 | 331.00 |
-| sparse32 | 1,000,000 | PHP list (no dedup) | 193.881 | 0.131 | 140.777 | 27794.75 |
-| sparse32 | 1,000,000 | PHP array set | 223.098 | 0.171 | 128.813 | 21429.01 |
-| sparse32 | 1,000,000 | Package PHP | 323.285 | 0.681 | 95.776 | 2929.70 |
-| sparse32 | 1,000,000 | Native accelerator | 249.785 | 0.882 | 87.856 | 2929.70 |
-| dense64 | 1,000,000 | PHP list (no dedup) | 114.984 | 0.160 | 157.191 | 32407.43 |
-| dense64 | 1,000,000 | PHP array set | 149.280 | 0.080 | 150.672 | 26041.68 |
-| dense64 | 1,000,000 | Package PHP | 664.221 | 0.631 | 0.464 | 331.02 |
-| dense64 | 1,000,000 | Native accelerator | 193.886 | 0.611 | 0.421 | 331.02 |
-| sparse64 | 1,000,000 | PHP list (no dedup) | 200.205 | 0.191 | 157.167 | 32407.43 |
-| sparse64 | 1,000,000 | PHP array set | 248.135 | 0.175 | 178.502 | 26041.68 |
-| sparse64 | 1,000,000 | Package PHP | 1017.564 | 0.941 | 96.386 | 2929.71 |
-| sparse64 | 1,000,000 | Native accelerator | 322.949 | 0.706 | 91.875 | 2929.71 |
+| dense32 | 1,000,000 | PHP list (no dedup) | 96.730 | 0.100 | 118.813 | 23871.55 |
+| dense32 | 1,000,000 | PHP array set | 118.720 | 0.060 | 94.554 | 17505.80 |
+| dense32 | 1,000,000 | Package PHP | 245.605 | 0.280 | 0.195 | 331.00 |
+| dense32 | 1,000,000 | Native accelerator | 129.462 | 0.251 | 0.288 | 331.00 |
+| sparse32 | 1,000,000 | PHP list (no dedup) | 159.266 | 0.090 | 119.825 | 27794.75 |
+| sparse32 | 1,000,000 | PHP array set | 233.221 | 0.181 | 117.869 | 21429.01 |
+| sparse32 | 1,000,000 | Package PHP | 250.003 | 0.520 | 80.457 | 2929.70 |
+| sparse32 | 1,000,000 | Native accelerator | 195.415 | 0.661 | 72.912 | 2929.70 |
+| dense64 | 1,000,000 | PHP list (no dedup) | 94.272 | 0.101 | 133.872 | 32407.43 |
+| dense64 | 1,000,000 | PHP array set | 117.945 | 0.060 | 127.446 | 26041.68 |
+| dense64 | 1,000,000 | Package PHP | 507.543 | 0.501 | 0.386 | 331.02 |
+| dense64 | 1,000,000 | Native accelerator | 152.630 | 0.460 | 0.312 | 331.02 |
+| sparse64 | 1,000,000 | PHP list (no dedup) | 158.197 | 0.100 | 132.789 | 32407.43 |
+| sparse64 | 1,000,000 | PHP array set | 199.028 | 0.190 | 135.096 | 26041.68 |
+| sparse64 | 1,000,000 | Package PHP | 775.475 | 0.731 | 80.217 | 2929.71 |
+| sparse64 | 1,000,000 | Native accelerator | 244.562 | 0.541 | 78.046 | 2929.71 |
 
 The list baseline uses `$ids[] = $id` and retains duplicates. The array-set baseline uses `$ids[$id] = true` and deduplicates like a bitmap. Arrays use PHP serialization; bitmaps use their portable format. These persistence formats are not interchangeable. `dense64` uses positive integer IDs above 2^40, with the same gaps as `dense32`; `sparse64` similarly offsets `sparse32`. Single-add timings include timer and benchmark dispatch overhead; see the raw timer floor and sample ranges.
 
@@ -144,34 +168,34 @@ Median CLI timings; build creates both input sets. RSS is whole-process peak aft
 
 | IDs/input | Workload | Backend | Build (ms) | Intersection (ms) | Peak RSS (MiB) |
 | ---: | --- | --- | ---: | ---: | ---: |
-| 1,000,000 | dense | PHP array | 238.83 | 27.7092 | 131.80 |
-| 1,000,000 | dense | Package PHP | 632.35 | 1.1251 | 54.43 |
-| 1,000,000 | dense | Native accelerator | 280.62 | 0.0193 | 53.27 |
-| 1,000,000 | sparse_mixed | PHP array | 418.05 | 48.0347 | 131.88 |
-| 1,000,000 | sparse_mixed | Package PHP | 609.49 | 4.2605 | 66.49 |
-| 1,000,000 | sparse_mixed | Native accelerator | 458.28 | 1.3678 | 60.39 |
-| 1,000,000 | ranges | PHP array | 205.79 | 26.8379 | 109.06 |
-| 1,000,000 | ranges | Package PHP | 0.37 | 0.0283 | 52.63 |
-| 1,000,000 | ranges | Native accelerator | 0.02 | 0.0023 | 52.55 |
+| 1,000,000 | dense | PHP array | 206.01 | 23.5996 | 132.00 |
+| 1,000,000 | dense | Package PHP | 497.97 | 0.8799 | 54.52 |
+| 1,000,000 | dense | Native accelerator | 232.84 | 0.0138 | 53.52 |
+| 1,000,000 | sparse_mixed | PHP array | 392.04 | 39.5543 | 131.77 |
+| 1,000,000 | sparse_mixed | Package PHP | 473.40 | 3.6982 | 66.52 |
+| 1,000,000 | sparse_mixed | Native accelerator | 359.54 | 1.0578 | 60.48 |
+| 1,000,000 | ranges | PHP array | 176.65 | 23.4142 | 108.99 |
+| 1,000,000 | ranges | Package PHP | 0.32 | 0.0221 | 52.65 |
+| 1,000,000 | ranges | Native accelerator | 0.01 | 0.0017 | 52.48 |
 
 Sparse unsigned 64-bit order queries: milliseconds per 1,000 warm queries. The accelerator column includes the package's C index; stock CRoaring uses direct scans.
 
 | IDs | Query | Package PHP | Stock CRoaring | Native accelerator | Stock / accelerator |
 | ---: | --- | ---: | ---: | ---: | ---: |
-| 1,000,000 | rank | 3.8961 | 336.1890 | 2.1389 | 157.18× |
-| 1,000,000 | select | 3.5231 | 204.1790 | 2.5188 | 81.06× |
+| 1,000,000 | rank | 2.7483 | 246.1905 | 1.5432 | 159.53× |
+| 1,000,000 | select | 2.7360 | 164.2837 | 1.8787 | 87.45× |
 
 Partial overlap inside every sparse container (1,048,576 IDs/input): warm intersection time in milliseconds. These inputs cannot use the identical-container shortcut.
 
 | IDs/container | PHP array | Package PHP | Native accelerator |
 | ---: | ---: | ---: | ---: |
-| 32 | 40.756 | 118.089 | 3.181 |
-| 256 | 29.172 | 85.765 | 0.713 |
-| 4,096 | 25.853 | 81.438 | 0.356 |
+| 32 | 38.692 | 87.637 | 2.346 |
+| 256 | 24.969 | 65.289 | 0.557 |
+| 4,096 | 21.814 | 62.923 | 0.456 |
 
 These are synthetic CLI workloads on shared hardware. The construction/set-algebra suite uses fresh processes. The partial-overlap check times warm intersections in one process, with inputs prepared beforehand. Order samples use fresh bitmaps in one process per mode/size. Input generation is included in set construction and excluded in order construction. Native mode is required; exact-result checks run outside the timers. Cold queries, mutation costs, other operations, settings, hashes, and sample ranges are retained in the full reports. Compare backends within the same run; CI host variation can affect comparisons between runs.
 
-[Download full benchmark reports and raw samples](https://github.com/petericebear/roaringbitmap-php/actions/runs/41850505761/artifacts/13334872497) (GitHub sign-in required) · [CI run](https://github.com/petericebear/roaringbitmap-php/actions/runs/41850505761). Only the three newest benchmark bundles are retained; artifacts also expire after 90 days. The measured snapshot remains readable here.
+[Download full benchmark reports and raw samples](https://github.com/petericebear/roaringbitmap-php/actions/runs/41862056583/artifacts/13340647855) (GitHub sign-in required) · [CI run](https://github.com/petericebear/roaringbitmap-php/actions/runs/41862056583). Only the three newest benchmark bundles are retained; artifacts also expire after 90 days. The measured snapshot remains readable here.
 <!-- benchmark:latest:end -->
 
 </details>
