@@ -14,7 +14,32 @@ A Composer library with one API and two implementations:
 CI compares ordinary PHP sets, the Composer package's PHP backend, and the optional native accelerator (CRoaring plus the C order index, loaded through FFI). It also measures stock CRoaring separately for 64-bit rank/select. The latest completed benchmark updates the snapshot below and links to one artifact containing full reports, raw samples, CSV, and source snapshots.
 
 <!-- benchmark:latest:start -->
-The first automated CI benchmark is pending. [View CI runs](https://github.com/petericebear/roaringbitmap-php/actions/workflows/tests.yml).
+Measured 2026-11-04T10:09:24.072627+01:00 with PHP 8.4.27 on Linux-7.0.0-1017-azure-x86_64-with-glibc2.39; 3 samples per configuration. Source: [58ce871](https://github.com/petericebear/roaringbitmap-php/commit/58ce871c50a687fd135122d49cd786e7471c58c8).
+
+Median CLI timings; build creates both input sets. RSS is whole-process peak after construction.
+
+| IDs/input | Workload | Backend | Build (ms) | Intersection (ms) | Peak RSS (MiB) |
+| ---: | --- | --- | ---: | ---: | ---: |
+| 1,000,000 | dense | PHP array | 236.42 | 27.0314 | 131.75 |
+| 1,000,000 | dense | Package PHP | 1168.11 | 1.3883 | 53.48 |
+| 1,000,000 | dense | Native accelerator | 338.79 | 0.0184 | 53.43 |
+| 1,000,000 | sparse_mixed | PHP array | 423.74 | 44.3606 | 131.73 |
+| 1,000,000 | sparse_mixed | Package PHP | 1736.50 | 156.9406 | 66.34 |
+| 1,000,000 | sparse_mixed | Native accelerator | 507.35 | 1.3632 | 60.31 |
+| 1,000,000 | ranges | PHP array | 202.51 | 26.6005 | 109.03 |
+| 1,000,000 | ranges | Package PHP | 0.39 | 0.0955 | 52.82 |
+| 1,000,000 | ranges | Native accelerator | 0.02 | 0.0023 | 52.72 |
+
+Sparse unsigned 64-bit order queries: milliseconds per 1,000 warm queries. The accelerator column includes the package's C index; stock CRoaring uses direct scans.
+
+| IDs | Query | Package PHP | Stock CRoaring | Native accelerator | Stock / accelerator |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 1,000,000 | rank | 3.5468 | 337.6129 | 1.9770 | 170.77× |
+| 1,000,000 | select | 3.5154 | 205.1769 | 2.4515 | 83.70× |
+
+These are synthetic CLI workloads on shared hardware. Set-algebra samples use fresh processes; order samples use fresh bitmaps in one process per mode/size. Input generation is included in set construction and excluded in order construction. Native mode is required; exact-result checks run outside the timers. Cold queries, mutation costs, other operations, settings, hashes, and sample ranges are retained in the full reports. Compare backends within the same run; CI host variation can affect comparisons between runs.
+
+[Download full benchmark reports and raw samples](https://github.com/petericebear/roaringbitmap-php/actions/runs/41804665058/artifacts/13308674453) (GitHub sign-in required) · [CI run](https://github.com/petericebear/roaringbitmap-php/actions/runs/41804665058). Only the three newest benchmark bundles are retained; artifacts also expire after 90 days. The measured snapshot remains readable here.
 <!-- benchmark:latest:end -->
 
 ## Start locally
