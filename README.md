@@ -107,6 +107,8 @@ The results below compare PHP arrays, the package's PHP backend, and native acce
 
 For tag membership and incremental collection, start with the [build-and-add benchmark](benchmarks/results/2026-11-04-membership/report.md). It compares append-only lists and deduplicating sets, separates live additions from saved updates, and measures publishing once per 100 new IDs. A fast intersection does not imply a faster single-item insertion.
 
+If the result must be a PHP array, see the [array round-trip benchmark](benchmarks/results/2026-11-04-array-roundtrip/report.md). It measures the full array → bitmap → add → array path, and restoring a Base64 bitmap before adding and expanding it. Both PHP and native results include `toArray()`; the comparison also records `Bitmap64`'s decimal-string output and optional conversion back to integers.
+
 The [bulk loading and sparse operations report](benchmarks/results/2026-11-04-bulk-comparison/report.md) compares package revisions, including partial-overlap workloads where PHP arrays remain faster than the PHP backend.
 
 <details>

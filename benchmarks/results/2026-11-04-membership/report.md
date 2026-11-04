@@ -207,3 +207,33 @@ python3 benchmarks/membership.py --sizes 3 100000 1000000 --samples 3 --probes 2
 Use `--php /absolute/path/to/herd/php84` or `--library /absolute/path/to/libroaring.dylib` to override discovery.
 
 [Raw samples and provenance](results.json) · [Summary with ranges](summary.csv) · Exact measured sources: source/
+
+## Additional measurements: return a PHP array
+
+Measured separately 2026-11-04T16:46:19.811954+01:00 through 2026-11-04T16:48:08.383636+01:00, using the same unchanged package implementation. These paths finish with a PHP array. The earlier saved-update tables finish with a compressed Base64 snapshot, so their totals are different operations.
+
+Array → bitmap → add one → array, compared with appending directly to an existing, unshared PHP list. Input creation is excluded. The new ID is absent and greater than all existing IDs.
+
+| Workload | IDs | Array append (µs) | PHP round trip (ms) | Native round trip (ms) |
+| --- | ---: | ---: | ---: | ---: |
+| dense32 | 1,000,000 | 0.125 | 210.480 | 65.118 |
+| sparse32 | 1,000,000 | <0.1 | 192.039 | 110.195 |
+| dense64 | 1,000,000 | <0.1 | 608.351 | 122.603 |
+| sparse64 | 1,000,000 | <0.1 | 896.999 | 137.882 |
+
+External input is a **saved Base64 bitmap**, not JSON. Both approaches below decode the same saved value with the stated backend and return the same typed array. Complete times are milliseconds; storage/network I/O is excluded.
+
+| Workload | IDs | Backend | Decode → bitmap add → array (ms) | Decode → array → append (ms) |
+| --- | ---: | --- | ---: | ---: |
+| dense32 | 1,000,000 | Package PHP | 66.837 | 66.969 |
+| dense32 | 1,000,000 | Native accelerator | 22.824 | 23.128 |
+| sparse32 | 1,000,000 | Package PHP | 161.304 | 159.751 |
+| sparse32 | 1,000,000 | Native accelerator | 118.634 | 118.326 |
+| dense64 | 1,000,000 | Package PHP | 167.615 | 166.883 |
+| dense64 | 1,000,000 | Native accelerator | 63.764 | 62.691 |
+| sparse64 | 1,000,000 | Package PHP | 264.768 | 265.302 |
+| sparse64 | 1,000,000 | Native accelerator | 122.527 | 122.807 |
+
+`Bitmap64::toArray()` returns decimal strings; the original PHP-list baseline retains integers. The full report separately measures conversion back to integers for fixtures within PHP_INT_MAX. Append permits duplicates; these fixtures add a known-new ID. Medians below 0.1 µs are shown as <0.1, not zero. Single append timings include the timer floor and are not throughput measurements. Saved-bitmap timings include public format validation and complete array materialization.
+
+The [complete round-trip report](../2026-11-04-array-roundtrip/report.md) includes all three sizes, phase timings, integer-output conversion, methodology and [raw data](../2026-11-04-array-roundtrip/results.json).

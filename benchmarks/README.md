@@ -5,11 +5,12 @@
 The `benchmarks` job runs after both test matrices pass on `main`, only when initiated by `petericebear`. It uses Ubuntu 24.04, PHP 8.4, the pinned native accelerator build, and a separate stock CRoaring build. All workloads execute sequentially on the same runner, with three repetitions at 100,000 and 1,000,000 IDs:
 
 - Membership updates: build one set, add a new ID, receive a duplicate, and restore/add/save a Base64 snapshot. Compares a PHP list, a deduplicating PHP array, and both package backends for dense/sparse 32-bit and 64-bit IDs (96 isolated-process samples). Also measures saving once per 100 new IDs.
+- Array round trips and saved-bitmap expansion: existing array → bitmap → add → array versus direct append, plus Base64 → bitmap → add → array versus Base64 → bitmap → array → append (120 isolated-process samples). Both saved paths receive identical payloads; the report also records integer-output conversion for Bitmap64.
 - Set algebra, construction, memory, and serialization: PHP arrays, package PHP, and native acceleration, using dense, mixed sparse, and range inputs (54 isolated-process samples).
 - Rank/select: PHP and accelerated native mode, plus stock native mode, for both widths and dense/sparse inputs (72 samples with fresh bitmaps).
 - Partial sparse intersections: all three backends, with 1,048,576 IDs/input and 32, 256, or 4,096 IDs per container (27 samples). Every container partially overlaps, so the identical-container shortcut cannot apply. This check uses one process and prepares inputs outside the timers.
 
-Together these produce 249 samples per CI bundle. The partial-overlap check uses its fixed input size even when smaller sizes are selected for a local harness check.
+Together these produce 369 samples per CI bundle. The partial-overlap check uses its fixed input size even when smaller sizes are selected for a local harness check.
 
 One `benchmark-<run-id>-<attempt>` artifact contains `report.md`, `summary.json`, the individual reports/raw JSON, set-operation CSV, harness snapshots, and exact package sources. The README shows the largest tested size, while the full artifact covers both sizes, cold and warm queries, mutation costs, and all operations. Results identify the measured commit, PHP/runtime settings, runner, library hashes, and source hashes. Shared CI machines vary; compare modes within a run and inspect sample ranges before interpreting small changes between runs. These measurements are not HTTP latency or universal speedup claims.
 
@@ -37,6 +38,12 @@ python3 benchmarks/ci.py --sizes 100000 1000000 --samples 3 --output .build/ci-b
 For a quick end-to-end harness check, use `--sizes 10000 --workloads dense --samples 3` with a new output directory. The artifact/README maintenance script refuses live changes outside an authorized main-branch CI context. Its cleanup and publication tests use mocked GitHub data.
 
 ## Local benchmarks
+
+The [array round-trip report](results/2026-11-04-array-roundtrip/report.md) extends the membership measurements with an array result. It tests existing arrays and saved Base64 bitmaps at 3, 100,000, and 1,000,000 IDs, with exact output/type checks, per-phase timings, and raw samples. The array baseline is a direct append to an unshared list; the saved-input comparison restores the same bitmap before each trial. It does not model a JSON or CSV string.
+
+```sh
+python3 benchmarks/roundtrip.py --sizes 3 100000 1000000 --samples 3 --output .build/roundtrip-new
+```
 
 The [November 4 membership update report](results/2026-11-04-membership/report.md) measures initial collection and later additions, including the `{1, 3, 5}` → `{1, 3, 5, 7}` example. It separates in-memory mutation latency from restoring and republishing a saved snapshot, at 3, 100,000, and 1,000,000 existing IDs. See its [raw samples](results/2026-11-04-membership/results.json) and [ranges](results/2026-11-04-membership/summary.csv).
 
