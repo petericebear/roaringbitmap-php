@@ -207,7 +207,7 @@ php -d ffi.enable=1 benchmarks/compare.php 100000
 python3 benchmarks/run.py --sizes 100000 1000000 --repetitions 5 --output benchmarks/results/new-run
 ```
 
-The tests cover unsigned boundaries through `2^64-1`, rank/select and cache invalidation, container transitions, ranges, mutation against independent set oracles, mixed-backend algebra, snapshots, malformed inputs, all 65,536 container keys, and Java/C/C++ fixtures from the official format repository. Independent Python integer vectors verify exact 64-bit conversions. CI runs PHP 8.2–8.5 with FFI disabled and native tests on Linux/macOS.
+The tests cover unsigned boundaries through `2^64-1`, rank/select and cache invalidation, container transitions, ranges, mutation against independent set oracles, mixed-backend algebra, snapshots, malformed inputs, all 65,536 container keys, and Java/C/C++ fixtures from the official format repository. Independent Python integer vectors verify exact 64-bit conversions. CI runs PHP 8.2–8.5 with FFI disabled and native tests on Ubuntu 24.04 (x64) and macOS 26 (Apple Silicon).
 
 CI jobs execute only when the GitHub account initiating the run is `petericebear`, including pushes, manual runs, and reruns. Automatic pull-request runs are disabled. The job conditions use [`github.triggering_actor`](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#github-context), so the account requesting a rerun is checked too. Other users' pushes can create a skipped workflow record, but no jobs start. Benchmarks run on `main` after both test matrices pass, using Ubuntu 24.04 and PHP 8.4. To trigger CI manually while authenticated as `petericebear`, use **Actions → Tests → Run workflow**, or:
 

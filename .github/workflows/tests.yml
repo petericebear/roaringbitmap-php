@@ -11,12 +11,12 @@ jobs:
   php:
     # Check the current initiator, including manual runs and reruns.
     if: ${{ github.triggering_actor == 'petericebear' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         php: ['8.2', '8.3', '8.4', '8.5']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
@@ -29,11 +29,12 @@ jobs:
     if: ${{ github.triggering_actor == 'petericebear' }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        # Keep Apple Silicon coverage; explicit labels avoid automatic OS migrations.
+        os: [ubuntu-24.04, macos-26]
         php: ['8.2', '8.5']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
