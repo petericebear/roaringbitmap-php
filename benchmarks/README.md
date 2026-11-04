@@ -1,4 +1,38 @@
-# Reproducible local performance measurements
+# Reproducible performance measurements
+
+## Automated CI benchmarks
+
+The `benchmarks` job runs after both test matrices pass on `main`, only when initiated by `petericebear`. It uses Ubuntu 24.04, PHP 8.4, the pinned native accelerator build, and a separate stock CRoaring build. All workloads execute sequentially on the same runner, with three repetitions at 100,000 and 1,000,000 IDs:
+
+- Set algebra, construction, memory, and serialization: PHP arrays, package PHP, and native acceleration, using dense, mixed sparse, and range inputs (54 isolated-process samples).
+- Rank/select: PHP and accelerated native mode, plus stock native mode, for both widths and dense/sparse inputs (72 samples with fresh bitmaps).
+
+One `benchmark-<run-id>-<attempt>` artifact contains `report.md`, `summary.json`, the individual reports/raw JSON, set-operation CSV, harness snapshots, and exact package sources. The README shows the largest tested size, while the full artifact covers both sizes, cold and warm queries, mutation costs, and all operations. Results identify the measured commit, PHP/runtime settings, runner, library hashes, and source hashes. Shared CI machines vary; compare modes within a run and inspect sample ranges before interpreting small changes between runs. These measurements are not HTTP latency or universal speedup claims.
+
+Benchmark publication is serialized. Only after generating a complete, verified bundle does cleanup trim matching main-branch benchmark artifacts to two; uploading the new bundle then keeps the total at three. A second check enforces the limit. Cleanup paginates through all artifacts and leaves unrelated names/branches alone. If an upload fails after cleanup, the previous two bundles remain. Expiry is also set to 90 days.
+
+The workflow publishes the measured README section through the GitHub Contents API using its workflow token. It preserves content outside the markers and retries if another README edit wins a concurrent update. The snapshot states the measured source commit, which can differ from the current `main` if newer code was pushed while measurement was running. The generated docs commit skips CI, preventing a publication loop. No personal access token or extra repository secret is needed.
+
+To download one of the retained bundles, follow its link in the README or use:
+
+```sh
+gh run list --repo petericebear/roaringbitmap-php --workflow tests.yml --branch main
+gh run download RUN_ID --repo petericebear/roaringbitmap-php --name benchmark-RUN_ID-ATTEMPT --dir .build/downloaded-benchmark
+```
+
+GitHub requires sign-in/read access to download artifacts. Old artifact links stop working after count-based pruning or expiry; the public README retains the last published numbers.
+
+To reproduce the bundle locally (including stock CRoaring):
+
+```sh
+bash tools/build-native.sh
+bash tools/build-native.sh --stock
+python3 benchmarks/ci.py --sizes 100000 1000000 --samples 3 --output .build/ci-benchmark-new
+```
+
+For a quick end-to-end harness check, use `--sizes 10000 --workloads dense --samples 3` with a new output directory. The artifact/README maintenance script refuses live changes outside an authorized main-branch CI context. Its cleanup and publication tests use mocked GitHub data.
+
+## Local benchmarks
 
 Read the [November 3, 2026 Herd measurement report](MEASUREMENTS.md) for measured results, tradeoffs, and links to all original samples.
 

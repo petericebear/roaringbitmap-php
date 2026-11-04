@@ -9,6 +9,14 @@ A Composer library with one API and two implementations:
 
 `Bitmap` stores unsigned **32-bit IDs** (`0` through `4,294,967,295`); `Bitmap64` stores unsigned **64-bit IDs** (`0` through `18,446,744,073,709,551,615`). Both support rank/select and require **64-bit PHP 8.2 or later in the PHP 8 series**. The package is not published on Packagist. `peter/roaring-bitmap` is a provisional package name to change before publication if desired.
 
+## Performance
+
+CI compares ordinary PHP sets, the Composer package's PHP backend, and the optional native accelerator (CRoaring plus the C order index, loaded through FFI). It also measures stock CRoaring separately for 64-bit rank/select. The latest completed benchmark updates the snapshot below and links to one artifact containing full reports, raw samples, CSV, and source snapshots.
+
+<!-- benchmark:latest:start -->
+The first automated CI benchmark is pending. [View CI runs](https://github.com/petericebear/roaringbitmap-php/actions/workflows/tests.yml).
+<!-- benchmark:latest:end -->
+
 ## Start locally
 
 ```sh
@@ -176,11 +184,13 @@ python3 benchmarks/run.py --sizes 100000 1000000 --repetitions 5 --output benchm
 
 The tests cover unsigned boundaries through `2^64-1`, rank/select and cache invalidation, container transitions, ranges, mutation against independent set oracles, mixed-backend algebra, snapshots, malformed inputs, all 65,536 container keys, and Java/C/C++ fixtures from the official format repository. Independent Python integer vectors verify exact 64-bit conversions. CI runs PHP 8.2–8.5 with FFI disabled and native tests on Linux/macOS.
 
-CI jobs execute only when the GitHub account initiating the run is `petericebear`, including pushes, manual runs, and reruns. Automatic pull-request runs are disabled. The job conditions use [`github.triggering_actor`](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#github-context), so the account requesting a rerun is checked too. Other users' pushes can create a skipped workflow record, but neither test matrix starts. To trigger CI manually while authenticated as `petericebear`, use **Actions → Tests → Run workflow**, or:
+CI jobs execute only when the GitHub account initiating the run is `petericebear`, including pushes, manual runs, and reruns. Automatic pull-request runs are disabled. The job conditions use [`github.triggering_actor`](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#github-context), so the account requesting a rerun is checked too. Other users' pushes can create a skipped workflow record, but no jobs start. Benchmarks run on `main` after both test matrices pass, using Ubuntu 24.04 and PHP 8.4. To trigger CI manually while authenticated as `petericebear`, use **Actions → Tests → Run workflow**, or:
 
 ```sh
 gh workflow run tests.yml --repo petericebear/roaringbitmap-php --ref main
 ```
+
+Each successful benchmark uploads one `benchmark-<run-id>-<attempt>` artifact and updates only the marked performance snapshot in this README. At most three benchmark artifacts are retained; unrelated artifacts are untouched. Bundles also expire after 90 days. Artifact downloads require GitHub sign-in; the measured README snapshot is public. Publication uses the workflow token and a docs commit with `[skip ci]`, so it does not start another benchmark. See [CI benchmark details](benchmarks/README.md#automated-ci-benchmarks) for reproduction and downloads.
 
 `composer bench` is a quick, single-sample timing check. The full benchmark runner compares PHP integer-keyed sets against both package backends using isolated processes, repeated samples, and full-process peak RSS that includes native allocations. It saves a Markdown report, raw JSON, and CSV; see [benchmark instructions](benchmarks/README.md). Native allocations are not included in PHP's allocator counters, so those counters alone are not used for the memory comparison.
 

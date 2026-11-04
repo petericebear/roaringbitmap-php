@@ -7,10 +7,11 @@ use RoaringBitmap\Bitmap;
 use RoaringBitmap\Bitmap64;
 use RoaringBitmap\Exception\NativeBackendUnavailable;
 use RoaringBitmap\Internal\UInt64;
+use RoaringBitmap\Internal\NativeLibrary;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$options = getopt('', ['size:', 'queries:', 'samples:', 'library:', 'output:']);
+$options = getopt('', ['size:', 'queries:', 'samples:', 'library:', 'output:', 'backends:']);
 $size = (int) ($options['size'] ?? 100000);
 $queries = (int) ($options['queries'] ?? 1000);
 $samples = (int) ($options['samples'] ?? 5);
@@ -18,15 +19,27 @@ if ($size < 5000 || $size > 1000000 || $queries < 1 || $queries > $size || $samp
     throw new InvalidArgumentException('Use size 5000..1000000, queries 1..size, and samples 3..20.');
 }
 $library = $options['library'] ?? (getenv('ROARING_LIBRARY') ?: dirname(__DIR__) . '/.build/croaring/libroaring.' . (PHP_OS_FAMILY === 'Darwin' ? 'dylib' : 'so'));
-$backends = [Backend::Php];
-try {
-    new Bitmap64(backend: Backend::Native, libraryPath: $library);
-    $backends[] = Backend::Native;
-} catch (NativeBackendUnavailable $error) {
-    if (getenv('ROARING_REQUIRE_NATIVE') === '1') {
-        throw $error;
+$requested = explode(',', $options['backends'] ?? 'php,native');
+if ($requested === [] || count(array_unique($requested)) !== count($requested) || array_diff($requested, ['php', 'native']) !== []) {
+    throw new InvalidArgumentException('Backends must be php, native, or php,native.');
+}
+$backends = [];
+$nativeIndex = false;
+foreach ($requested as $name) {
+    $backend = Backend::from($name);
+    if ($backend === Backend::Native) {
+        try {
+            new Bitmap64(backend: $backend, libraryPath: $library);
+            $nativeIndex = NativeLibrary::supportsOrderIndex(NativeLibrary::load($library, true));
+        } catch (NativeBackendUnavailable $error) {
+            if (getenv('ROARING_REQUIRE_NATIVE') === '1' || $requested === ['native']) {
+                throw $error;
+            }
+            echo "Native backend unavailable; benchmarking PHP only.\n";
+            continue;
+        }
     }
-    echo "Native backend unavailable; benchmarking PHP only.\n";
+    $backends[] = $backend;
 }
 $destination = isset($options['output']) ? rtrim($options['output'], '/') : null;
 if ($destination !== null && file_exists($destination . '/results.json')) {
@@ -77,6 +90,7 @@ $document = [
     'ini' => ['ffi.enable' => ini_get('ffi.enable'), 'opcache.enable_cli' => ini_get('opcache.enable_cli'),
         'opcache.jit' => ini_get('opcache.jit'), 'memory_limit' => ini_get('memory_limit'), 'xdebug' => extension_loaded('xdebug')],
     'library' => $library, 'library_sha256' => is_file($library) ? hash_file('sha256', $library) : null,
+    'native_order_index' => $nativeIndex, 'backends' => array_map(static fn (Backend $b): string => $b->value, $backends),
     'benchmark_sha256' => hash_file('sha256', __FILE__), 'source_sha256' => $hashes,
     'size' => $size, 'queries' => $queries, 'repetitions' => $samples, 'command' => $argv,
     'method' => 'Sequential samples in one PHP process; fresh bitmaps per sample; source IDs generated before timing; no RSS comparison.',

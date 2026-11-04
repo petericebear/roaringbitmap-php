@@ -67,10 +67,10 @@ def render_report(document, destination):
         return value(workload, size, numerator, metric) / value(workload, size, denominator, metric)
 
     lines = [
-        "# Herd benchmark: PHP sets before adoption, Roaring after adoption",
+        "# PHP sets before adoption, Roaring after adoption",
         "",
         f"Measured {document['started_at']} through {document['finished_at']}. All times below are medians of "
-        f"{document['repetitions']} independent PHP processes per configuration. These are local CLI measurements, not Laravel HTTP throughput.",
+        f"{document['repetitions']} independent PHP processes per configuration. These are CLI measurements, not Laravel HTTP throughput.",
         "",
         "**Before:** a PHP array keyed by integer ID, with `true` values. **After:** this package forced to `Backend::Php` or `Backend::Native`. "
         "This also measures the change from the PHP backend to native acceleration. The package algorithms were not modified for this run.",
@@ -80,12 +80,12 @@ def render_report(document, destination):
         f"- CPU: {environment.get('cpu') or 'unavailable'}; {environment.get('logical_cpus') or 'unknown'} logical CPUs; "
         f"{int(environment['ram_bytes']) / 2**30:.0f} GiB RAM." if environment.get('ram_bytes') else "- Hardware details unavailable; see results.json.",
         f"- OS: {environment['platform']}; architecture: {environment['architecture']}.",
-        f"- PHP: {document['samples'][0]['runtime']['php']}, Laravel Herd binary `{document['samples'][0]['runtime']['binary']}`.",
+        f"- PHP: {document['samples'][0]['runtime']['php']}, binary `{document['samples'][0]['runtime']['binary']}`.",
         "- CRoaring: 5.4.0, compiled locally with `-O3 -std=c11 -dynamiclib -fPIC` on macOS "
         "(`-shared` on Linux); verified source hashes and library hash are in results.json.",
         f"- Compiler: {environment['compiler'].splitlines()[0] if environment.get('compiler') else 'unknown'}.",
         "- Each worker uses `ffi.enable=1`, `opcache.enable_cli=0`, `opcache.jit=disable`, "
-        "and `memory_limit=1G`. Herd's default CLI memory limit was 128M; the override permits the large PHP-array baseline. Xdebug state is recorded in raw results.",
+        "and `memory_limit=1G`. The memory limit permits the large PHP-array baseline. Xdebug state is recorded in raw results.",
         "- The native library is passed via `ROARING_LIBRARY`. No global Herd/PHP configuration changes are required.",
         "",
         "## Construction, intersection, and process memory",
@@ -151,7 +151,7 @@ def render_report(document, destination):
               "- Native decoding still performs the package's PHP validation pass. It is not a measurement of raw CRoaring deserialization alone.",
               "- Native range containers and PHP array/bitset containers have different memory and persistence costs. No run optimization is applied to bulk-loaded native bitmaps in this benchmark.",
               "- These are deterministic synthetic datasets with 50% overlap. They do not cover every cardinality distribution, mutation pattern, real request, or concurrency level.",
-              "- This is a single shared developer laptop with no CPU pinning or controlled thermal state. Sample ranges are disclosed; very short timings and large ratios should be treated accordingly.",
+              "- These measurements run on a shared machine without CPU pinning or controlled thermal state. Sample ranges are disclosed; very short timings and large ratios should be treated accordingly.",
               "- The native adapter is explicitly selected. Automatic fallback is tested in the package suite but does not participate in the native timing measurements.",
               "", "## Reproduce", "", "```sh", "composer install", "bash tools/build-native.sh",
               "python3 benchmarks/run.py --sizes " + " ".join(map(str, document["sizes"]))
@@ -194,8 +194,17 @@ def main():
         "ram_bytes": output(["sysctl", "-n", "hw.memsize"]) if platform.system() == "Darwin" else None,
         "compiler": output([os.environ.get("CC", "cc"), "--version"]),
     }
+    if platform.system() == "Linux":
+        cpuinfo = Path('/proc/cpuinfo')
+        if cpuinfo.exists():
+            environment['cpu'] = next((line.split(':', 1)[1].strip() for line in cpuinfo.read_text().splitlines()
+                                       if line.startswith('model name')), environment['cpu'])
+        meminfo = Path('/proc/meminfo')
+        if meminfo.exists():
+            environment['ram_bytes'] = next((int(line.split()[1]) * 1024 for line in meminfo.read_text().splitlines()
+                                             if line.startswith('MemTotal:')), None)
     # Unavailable restricted hardware queries do not invalidate timing or process RSS.
-    sources = list((ROOT / "src").rglob("*.php")) + [ROOT / "benchmarks/worker.php", Path(__file__).resolve(), ROOT / "tools/build-native.sh"]
+    sources = list((ROOT / "src").rglob("*.php")) + list((ROOT / "native").glob("*.c")) + [ROOT / "benchmarks/worker.php", Path(__file__).resolve(), ROOT / "tools/build-native.sh"]
     (destination / "harness").mkdir(exist_ok=True)
     for name in ["worker.php", "run.py"]:
         shutil.copyfile(ROOT / "benchmarks" / name, destination / "harness" / name)

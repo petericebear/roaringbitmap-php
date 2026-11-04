@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   php:
     # Check the current initiator, including manual runs and reruns.
@@ -60,3 +63,56 @@ jobs:
             export ROARING_LIBRARY="$PWD/.build/croaring/libroaring-stock.so"
           fi
           ROARING_REQUIRE_NATIVE=1 php -d ffi.enable=1 tests/run.php
+
+  benchmarks:
+    needs: [php, native]
+    if: ${{ github.triggering_actor == 'petericebear' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    # One publisher at a time keeps the artifact count bounded across runs/reruns.
+    concurrency:
+      group: benchmark-artifacts-main
+      cancel-in-progress: false
+    permissions:
+      actions: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: ffi
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - name: Check artifact retention and README publication helpers
+        run: python3 tests/benchmark_ci.py
+      - name: Build native accelerator and stock CRoaring
+        run: |
+          bash tools/build-native.sh
+          bash tools/build-native.sh --stock
+      - name: Benchmark package and native accelerator
+        run: python3 benchmarks/ci.py --sizes 100000 1000000 --samples 3 --output "$RUNNER_TEMP/benchmark"
+      - name: Make room for the new benchmark artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 benchmarks/artifacts.py prune --keep 2
+      - name: Upload complete benchmark bundle
+        id: upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: benchmark-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/benchmark/
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 6
+      - name: Enforce maximum of three benchmark artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 benchmarks/artifacts.py prune --keep 3
+      - name: Publish measured performance in README
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+        run: python3 benchmarks/artifacts.py publish --directory "$RUNNER_TEMP/benchmark" --artifact-id "$ARTIFACT_ID"
