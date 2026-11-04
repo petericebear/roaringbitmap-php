@@ -13,6 +13,8 @@ import sys
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+from membership import render_tables as render_membership_tables
+
 ROOT = Path(__file__).resolve().parents[1]
 BACKEND_LABELS = {"array": "PHP array", "php": "Package PHP", "native": "Native accelerator"}
 
@@ -24,6 +26,7 @@ def load(path):
 def render_tables(summary, sizes):
     sets = {(r["size"], r["workload"], r["backend"]): r["metrics"] for r in summary["sets"]}
     lines = [
+        render_membership_tables(summary['membership'], sizes), "",
         "Median CLI timings; build creates both input sets. RSS is whole-process peak after construction.",
         "",
         "| IDs/input | Workload | Backend | Build (ms) | Intersection (ms) | Peak RSS (MiB) |",
@@ -74,6 +77,10 @@ def run_bundle(destination, sizes, repetitions, workloads, php):
     def run(command):
         subprocess.run(command, cwd=ROOT, env=env, check=True)
 
+    run([sys.executable, str(ROOT / 'benchmarks/membership.py'), '--php', php,
+         '--sizes', *map(str, sizes), '--samples', str(repetitions), '--library', str(indexed_library),
+         '--output', str(destination / 'membership')])
+    membership = load(destination / 'membership/results.json')
     run([sys.executable, str(ROOT / "benchmarks/run.py"), "--php", php,
          "--sizes", *map(str, sizes), "--workloads", *workloads, "--repetitions", str(repetitions),
          "--library", str(indexed_library), "--output", str(destination / "sets")])
@@ -111,6 +118,8 @@ def run_bundle(destination, sizes, repetitions, workloads, php):
         "runner": {key: os.environ.get(key) for key in ("RUNNER_OS", "RUNNER_ARCH", "ImageOS", "ImageVersion")},
         "sizes": sizes, "repetitions": repetitions, "workloads": workloads,
         "sets": sets["summary"], "order": orders,
+        "membership": {key: membership[key] for key in ('workloads', 'sizes', 'summary')},
+        "membership_samples": len(membership['samples']),
         "set_samples": len(sets["samples"]),
         "order_samples": len(sizes) * 4 * 3 * repetitions,
         "partial_sparse": partial,
@@ -122,7 +131,8 @@ def run_bundle(destination, sizes, repetitions, workloads, php):
     for directory in ("src", "native"):
         shutil.copytree(ROOT / directory, source_dir / directory)
     for name in ("composer.json", "LICENSE", "tools/build-native.sh", "benchmarks/ci.py",
-                 "benchmarks/run.py", "benchmarks/worker.php", "benchmarks/order.php", "benchmarks/sparse-intersection.php"):
+                 "benchmarks/run.py", "benchmarks/worker.php", "benchmarks/order.php", "benchmarks/sparse-intersection.php",
+                 "benchmarks/membership.py", "benchmarks/membership-worker.php"):
         target = source_dir / name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / name, target)
@@ -143,7 +153,9 @@ def run_bundle(destination, sizes, repetitions, workloads, php):
     readme = intro + "\n\n" + render_tables(summary, [max(sizes)]) + "\n\n" + notes + "\n"
     (destination / "readme.md").write_text(readme)
     report = ["# CI package and native accelerator benchmark", "", intro, "", render_tables(summary, sizes), "", notes, "",
-              "## Full reports and data", "", "- [Set algebra, construction, memory, and persistence](sets/report.md)",
+              "## Full reports and data", "", "- [Membership creation and later updates](membership/report.md) "
+              "([raw samples](membership/results.json), [CSV with ranges](membership/summary.csv))",
+              "- [Set algebra, construction, memory, and persistence](sets/report.md)",
               "- [Set samples](sets/results.json) and [CSV](sets/summary.csv)",
               "- [Combined summary and provenance](summary.json)", "- Exact implementation and harnesses: source/", ""]
     report.append("- [Partial sparse intersection samples and provenance](partial-sparse.json)")

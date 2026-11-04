@@ -1,0 +1,24 @@
+{
+    "name": "peter/roaring-bitmap",
+    "description": "Roaring bitmaps with a pure PHP implementation and optional CRoaring acceleration",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "php-64bit": "^8.2"
+    },
+    "suggest": {
+        "ext-ffi": "Enables the optional native backend when CRoaring is also installed"
+    },
+    "autoload": {
+        "psr-4": {
+            "RoaringBitmap\\": "src/"
+        }
+    },
+    "scripts": {
+        "test": "@php tests/run.php",
+        "bench": "@php benchmarks/compare.php",
+        "bench:report": "python3 benchmarks/run.py",
+        "bench:order": "@php benchmarks/order.php"
+    }
+}
