@@ -78,7 +78,7 @@ $restored = Bitmap64::fromPortableBytes($ids->toPortableBytes());
 - **Width conversion:** promote a 32-bit bitmap with `new Bitmap64($bitmap32)`. Set operations require operands of the same width; they do not implicitly mix `Bitmap` and `Bitmap64`.
 - **Persistence:** `Bitmap64` uses the unsigned 64-bit extension of RoaringFormatSpec: an ordered table of upper-32-bit keys and embedded portable 32-bit bitmaps. Use `Bitmap64::fromPortableBytes()` to read it. Other 64-bit Roaring formats are not automatically interchangeable. Existing `Bitmap` bytes and APIs retain their 32-bit semantics.
 
-The PHP implementation reuses 32-bit engines under the upper-bit keys. Native mode uses CRoaring's 64-bit API. Readers validate embedded offsets, sorted keys, payloads, and trailing bytes before native deserialization; valid empty embedded bitmaps are normalized away. PHP `serialize()` stores portable data and selects an available backend when restored, for both widths. Run `php examples/advanced.php` for a complete example.
+The PHP implementation reuses 32-bit engines under the upper-bit keys. Native mode uses CRoaring's 64-bit API. Readers validate embedded offsets, sorted keys, payloads, and trailing bytes before native deserialization; valid empty embedded bitmaps are normalized away. PHP `serialize()` stores portable data and selects an available backend when restored, for both widths. Run `php examples/advanced.php` for complete array and saved-Base64 workflows. The [Laravel/Elasticsearch example](../examples/README.md#laravel-and-elasticsearch) stores and updates saved membership, then queries Elasticsearch directly with its Base64 value.
 
 ## Behavior and format
 

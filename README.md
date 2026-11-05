@@ -204,7 +204,7 @@ These are synthetic CLI workloads on shared hardware. The construction/set-algeb
 
 - [API and data formats](docs/api.md): operations, ranges, unsigned IDs, and serialization.
 - [Native backend setup](docs/native-backend.md): build and deployment instructions.
-- [Examples](examples/): basic usage and 64-bit operations.
+- [Examples](examples/README.md): saved Base64 workflows, 64-bit operations, and Laravel/Elasticsearch membership storage and queries.
 - [Benchmarks](benchmarks/README.md): measurements, raw data, and reproduction.
 - [Contributing](CONTRIBUTING.md): local tests, CI, and issue reporting.
 
